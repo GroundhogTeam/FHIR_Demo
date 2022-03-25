@@ -1,0 +1,120 @@
+[
+  {
+    "resource": "Patient",
+    "searchParameters": [
+      {
+        "ch_Name": "identifier",
+        "parameter_name": "identifier",
+        "selected": false,
+        "input_content": {
+          "type": "text",
+          "value": ""
+        },
+        "switched": true
+      },
+      {
+        "ch_Name": "性別",
+        "parameter_name": "gender",
+        "selected": false,
+        "input_content": {
+          "type": "radio",
+          "value_list": [
+            {
+              "key": "男生",
+              "value": "male"
+            },
+            {
+              "key": "女生",
+              "value": "female"
+            }
+          ],
+          "value": ""
+        },
+        "switched": true
+      },
+      {
+        "ch_Name": "生日",
+        "parameter_name": "birthdate",
+        "selected": false,
+        "input_content": {
+          "type": "date",
+          "key": [
+            {
+              "oncheck": true,
+              "input_content": {
+                "type": "select",
+                "value_list": [
+                  {
+                    "key": "等於(=)",
+                    "value": "eq",
+                    "status": false
+                  },
+                  {
+                    "key": "大於(>)",
+                    "value": "gt",
+                    "status": false
+                  },
+                  {
+                    "key": "大於或等於(>=)",
+                    "value": "ge",
+                    "status": true
+                  },
+                  {
+                    "key": "小於(<)",
+                    "value": "lt",
+                    "status": false
+                  },
+                  {
+                    "key": "小於或等於(<=)",
+                    "value": "le",
+                    "status": false
+                  }
+                ],
+                "value": ""
+              }
+            },
+            {
+              "oncheck": true,
+              "input_content": {
+                "type": "select",
+                "value_list": [
+                  {
+                    "key": "等於(=)",
+                    "value": "eq",
+                    "status": false
+                  },
+                  {
+                    "key": "大於(>)",
+                    "value": "gt",
+                    "status": false
+                  },
+                  {
+                    "key": "大於或等於(>=)",
+                    "value": "ge",
+                    "status": false
+                  },
+                  {
+                    "key": "小於(<)",
+                    "value": "lt",
+                    "status": false
+                  },
+                  {
+                    "key": "小於或等於(<=)",
+                    "value": "le",
+                    "status": true
+                  }
+                ],
+                "value": ""
+              }
+            }
+          ]
+        },
+        "switched": true
+      }
+    ]
+  },
+  {
+    "resource": "Observation",
+    "searchParameters": []
+  }
+]
