@@ -91,11 +91,22 @@
                 <h5><b>搜尋結果</b></h5>
             </div>
             <div class="" style="margin-bottom:10px;">
-                <input id="myInput" class="form-control col-md-2" type="text" placeholder="Search.." onkeydown=return (event.keyCode!=13)>
-            </div>
+                    <input id="myInput" class="form-control col-md-2" type="text" placeholder="Search.." onkeydown=return (event.keyCode!=13)>
+                </div>
+
             <div class="card-block">
                 <div class="table-responsive">
-                    <table id="cutomerTable" class="display table table-striped table-hover dataTable text-break" style="width: 100%;" role="grid">
+                    @*<form class="form-inline mt-2 mt-md-0">
+                            <input id="input1" data-table="order-table" class="light-table-filter form-control mr-sm-2" type="Search" placeholder="Search" aria-label="Search">
+                        </form>*@
+                    @*<input type="search" class="form-control" placeholder="Search Dashboard" aria-label="Search Dashboard">
+                    <div class="drop-down   d-md-none">
+                        <form action="#">
+                            <input type="text" class="form-control" placeholder="Search">
+                        </form>
+                    </div>*@
+
+                    <table id="cutomerTable" class="order-table table-bordered zero-configuration display table table-striped table-hover dataTable text-break" style="width: 100%;" role="grid">
                     </table>
                 </div>
             </div>
@@ -108,6 +119,62 @@
     <script src="~/Scripts/datatables/dataTables.bootstrap4.min.js"></script>
     @*<script src="~/Scripts/FixedHeader/js/dataTables.fixedHeader.min.js"></script>*@
     <script type="text/javascript">
+
+        //// 搜尋
+        //$(function () {
+        //    'use strict';
+
+        //    // 建立 LightTableFilter
+        //    var LightTableFilter = (function (Arr) {
+
+        //        var _input;
+
+        //        // 資料輸入事件處理函數
+        //        function _onInputEvent(e) {
+        //            _input = e.target;
+        //            var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
+        //            Arr.forEach.call(tables, function (table) {
+        //                Arr.forEach.call(table.tBodies, function (tbody) {
+        //                    Arr.forEach.call(tbody.rows, _filter);
+        //                });
+        //            });
+        //        }
+
+
+        //        function _filter(row) {
+        //            var text = row.textContent.toLowerCase(),
+        //                val = _input.value.toLowerCase();
+        //            row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+        //        }
+
+        //        return {
+        //            // 初始化函數
+        //            init: function () {
+        //                var inputs = document.getElementsByClassName('light-table-filter');
+        //                Arr.forEach.call(inputs, function (input) {
+        //                    input.oninput = _onInputEvent;
+        //                });
+        //            }
+        //        };
+        //    })(Array.prototype);
+
+        //    // 網頁載入完成後，啟動 LightTableFilter
+        //    document.addEventListener('readystatechange', function () {
+        //        if (document.readyState === 'complete') {
+        //            LightTableFilter.init();
+        //        }
+        //    });
+
+        //})(document);
+
+
+
+
+
+
+
+
+   /*     //------------------*/
         var baseSiteURL = '@Url.Content("~/")';
 
         $(document).on('keypress', 'input[type="text"]',
@@ -1215,11 +1282,12 @@
 
         //初始畫面
         Patient();
-        var table = $("#cutomerTable").DataTable();
+        var tttt = $("#cutomerTable").DataTable();
+        //alert("1232");
         $('#myInput').on('keyup', function () {
-            var a = table.search(this.value).draw();
+            table.search(this.value).draw();
             alert("123");
-            alert(a);
+        //    alert(a);
         });
         $("#ResourceSelect").on("change", function () {
             $("#Parameter").empty();
@@ -1237,12 +1305,16 @@
                 case "ServiceRequest": ServiceRequest(); break;
             }
             var table = $("#cutomerTable").DataTable();
-            $('#myInput').on('keyup', function () {
+            $("#myInput").on('keyup', function () {
                 table.search(this.value).draw();
+                var a = $("#myInput").text();
+                alert(a);
+                //alert("123");
+                //    alert(a);
             });
-            
+
         });
-        
+
         function ReBuilddatatable()
         {
             if ($.fn.dataTable.isDataTable('#cutomerTable')) {
@@ -1260,7 +1332,7 @@
             }
 
             var table = $("#cutomerTable").DataTable({
-                "searching": true,
+                "searching": false,
                 /*欄位置頂*/
                 "fixedHeader": true,
                 "proccessing": true,
