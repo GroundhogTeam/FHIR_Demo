@@ -11,14 +11,16 @@ namespace FHIR_Demo.Controllers
     {
         private ConnectHelper connecthelper = new ConnectHelper();
 
-        public async Task<ActionResult> Index(string res, string id)
+        public async Task<ActionResult> Index(string res, string id, string sele)
         {
             string[] Resource = new string[] { "Patient", "Encounter", "Observation", "MedicationRequest", "Procedure", "Condition", "DiagnosticReport", "ServiceRequest" };
             if (Resource.Contains(res) && id != null)
             {
                 string patient_id = "";
+                string selerestype = "";
                 string resourcetype = "";//判斷resourcetype的變數
                 resourcetype = res;
+                selerestype = sele;
 
                 Bundle Res_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block("_id=" + id, res));
 
@@ -92,166 +94,334 @@ namespace FHIR_Demo.Controllers
 
 
                 List<dynamic> Patient_Search_reosurces = new List<dynamic>();
-
-                if (patient_id != "" && Res_Bundle.entry.Count > 0)
+                if (selerestype != null)
                 {
-                    if(resourcetype == "Procedure")
+                    if (patient_id != "" && Res_Bundle.entry.Count > 0)
                     {
-                        var patient_query_list = new List<string>();
-                        patient_query_list.Add("_id=" + patient_id);
-                        //patient_query_list.Add("_revinclude=Encounter:patient");
-                        //patient_query_list.Add("_revinclude=Observation:patient");
-                        //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                        patient_query_list.Add("_revinclude=Procedure:patient");
-                        //patient_query_list.Add("_revinclude=Condition:patient");
-                        //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
-                        patient_query_list.Add("_total=accurate");
-
-                        var query = string.Join("&", patient_query_list);
-
-                        Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
-
-
-                        foreach (var entry in Patient_Bundle.entry)
+                        if (selerestype == "Procedure")
                         {
-                            Patient_Search_reosurces.Add(entry.resource);
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
                         }
-                    }
-                    else if (resourcetype == "Observation")
-                    {
-                        var patient_query_list = new List<string>();
-                        patient_query_list.Add("_id=" + patient_id);
-                        //patient_query_list.Add("_revinclude=Encounter:patient");
-                        patient_query_list.Add("_revinclude=Observation:patient");
-                        //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                        //patient_query_list.Add("_revinclude=Procedure:patient");
-                        //patient_query_list.Add("_revinclude=Condition:patient");
-                        //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
-                        patient_query_list.Add("_total=accurate");
-
-                        var query = string.Join("&", patient_query_list);
-
-                        Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
-
-
-                        foreach (var entry in Patient_Bundle.entry)
+                        else if (selerestype == "Observation")
                         {
-                            Patient_Search_reosurces.Add(entry.resource);
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
                         }
-                    }
-                    else if (resourcetype == "Patient")
-                    {
-                        var patient_query_list = new List<string>();
-                        patient_query_list.Add("_id=" + patient_id);
-                        //patient_query_list.Add("_revinclude=Encounter:patient");
-                        //patient_query_list.Add("_revinclude=Observation:patient");
-                        //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                        //patient_query_list.Add("_revinclude=Procedure:patient");
-                        //patient_query_list.Add("_revinclude=Condition:patient");
-                        //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
-                        patient_query_list.Add("_total=accurate");
-
-                        var query = string.Join("&", patient_query_list);
-
-                        Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
-
-
-                        foreach (var entry in Patient_Bundle.entry)
+                        else if (selerestype == "Patient")
                         {
-                            Patient_Search_reosurces.Add(entry.resource);
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
                         }
-                    }
-                    else if (resourcetype == "Encounter")
-                    {
-                        var patient_query_list = new List<string>();
-                        patient_query_list.Add("_id=" + patient_id);
-                        patient_query_list.Add("_revinclude=Encounter:patient");
-                        //patient_query_list.Add("_revinclude=Observation:patient");
-                        //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                        //patient_query_list.Add("_revinclude=Procedure:patient");
-                        //patient_query_list.Add("_revinclude=Condition:patient");
-                        //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
-                        patient_query_list.Add("_total=accurate");
-
-                        var query = string.Join("&", patient_query_list);
-
-                        Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
-
-
-                        foreach (var entry in Patient_Bundle.entry)
+                        else if (selerestype == "Encounter")
                         {
-                            Patient_Search_reosurces.Add(entry.resource);
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
                         }
-                    }
-                    else if (resourcetype == "MedicationRequest")
-                    {
-                        var patient_query_list = new List<string>();
-                        patient_query_list.Add("_id=" + patient_id);
-                        //patient_query_list.Add("_revinclude=Encounter:patient");
-                        //patient_query_list.Add("_revinclude=Observation:patient");
-                        patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                        //patient_query_list.Add("_revinclude=Procedure:patient");
-                        //patient_query_list.Add("_revinclude=Condition:patient");
-                        //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
-                        patient_query_list.Add("_total=accurate");
-
-                        var query = string.Join("&", patient_query_list);
-
-                        Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
-
-
-                        foreach (var entry in Patient_Bundle.entry)
+                        else if (selerestype == "MedicationRequest")
                         {
-                            Patient_Search_reosurces.Add(entry.resource);
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
                         }
-                    }
-                    else if (resourcetype == "Condition")
-                    {
-                        var patient_query_list = new List<string>();
-                        patient_query_list.Add("_id=" + patient_id);
-                        //patient_query_list.Add("_revinclude=Encounter:patient");
-                        //patient_query_list.Add("_revinclude=Observation:patient");
-                        //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                        //patient_query_list.Add("_revinclude=Procedure:patient");
-                        patient_query_list.Add("_revinclude=Condition:patient");
-                        //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
-                        patient_query_list.Add("_total=accurate");
-
-                        var query = string.Join("&", patient_query_list);
-
-                        Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
-
-
-                        foreach (var entry in Patient_Bundle.entry)
+                        else if (selerestype == "Condition")
                         {
-                            Patient_Search_reosurces.Add(entry.resource);
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
                         }
-                    }
-                    else if (resourcetype == "DiagnosticReport")
-                    {
-                        var patient_query_list = new List<string>();
-                        patient_query_list.Add("_id=" + patient_id);
-                        //patient_query_list.Add("_revinclude=Encounter:patient");
-                        //patient_query_list.Add("_revinclude=Observation:patient");
-                        //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                        //patient_query_list.Add("_revinclude=Procedure:patient");
-                        //patient_query_list.Add("_revinclude=Condition:patient");
-                        patient_query_list.Add("_revinclude=DiagnosticReport:patient");
-                        patient_query_list.Add("_total=accurate");
-
-                        var query = string.Join("&", patient_query_list);
-
-                        Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
-
-
-                        foreach (var entry in Patient_Bundle.entry)
+                        else if (selerestype == "DiagnosticReport")
                         {
-                            Patient_Search_reosurces.Add(entry.resource);
-                        }
-                    }
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
 
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
+                        }
+
+                        ViewBag.Resources = Patient_Search_reosurces; //左圖的
+                        var asd = JsonConvert.SerializeObject(Patient_Search_reosurces);
+                        return Json(asd);
+                    }
                 }
-                ViewBag.Resources = Patient_Search_reosurces;
+                else if (selerestype == null)
+                {
+                    if (patient_id != "" && Res_Bundle.entry.Count > 0)
+                    {
+                        if (resourcetype == "Procedure")
+                        {
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
+                        }
+                        else if (resourcetype == "Observation")
+                        {
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
+                        }
+                        else if (resourcetype == "Patient")
+                        {
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
+                        }
+                        else if (resourcetype == "Encounter")
+                        {
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
+                        }
+                        else if (resourcetype == "MedicationRequest")
+                        {
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
+                        }
+                        else if (resourcetype == "Condition")
+                        {
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
+                        }
+                        else if (resourcetype == "DiagnosticReport")
+                        {
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
+                        }
+
+                    }
+                    ViewBag.Resources = Patient_Search_reosurces;
+                }
+
+                    
                 return View();
             }
             else
