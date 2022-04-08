@@ -21,47 +21,76 @@ namespace FHIR_Demo.Controllers
         private string SearchParameter_query;
         private int filteredResultsCount;
         private int totalResultsCount;
-
-        public async Task<dynamic> GetResource(DataTableAjaxPostModel model, string resource , string search = null)
+        private string page2;
+        public async Task<dynamic> GetResource(DataTableAjaxPostModel model, string resource,string search = null,string div_card2=null)
         {
+            //int pagesize = 10;
+            //int pagecurrent = page < 1 ? 1 : page;
             FHIR_Resource = resource;
-            SearchParameter_query = search;
+            SearchParameter_query = search;//搜尋條件
 
-            var res = await YourCustomSearchFunc(model);
+            if (div_card2 == null)
+            {
+                div_card2 = "1";
+                page2 = div_card2;
+            }
+            else
+            {
+                page2 = div_card2;
+            }
+
+
+            var res = await YourCustomSearchFunc(model, page2);
 
             var result = new List<dynamic>(res.Count);
+            //var result = new List<dynamic>();
 
             foreach (var s in res)
             {
                 result.Add(s);
             };
+            var output = JsonConvert.SerializeObject(Json(new
+            {
+                //draw = model.draw,
+                recordsTotal = totalResultsCount,//總筆數
+                recordsFiltered = filteredResultsCount,//總過濾筆數
+                data = result
+                //data = filteredResultsCount
+
+            }).Data);
 
             return JsonConvert.SerializeObject(Json(new
             {
-                draw = model.draw,
-                recordsTotal = totalResultsCount,
-                recordsFiltered = filteredResultsCount,
-                data = result
+                //draw = model.draw,
+                recordsTotal = totalResultsCount,//總筆數
+                recordsFiltered = filteredResultsCount,//總過濾筆數
+                data = result,
+                //data = filteredResultsCount
             }).Data);
-            
+
         }
 
-        public async Task<IList<dynamic>> YourCustomSearchFunc(DataTableAjaxPostModel model)
+
+
+        public async Task<IList<dynamic>> YourCustomSearchFunc(DataTableAjaxPostModel model, string page2)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
             var take = model.length;
+            //var take = 332;
             var skip = model.start;
-
+            var page = model.start / 10 + 1;
             string sortBy = "";
             bool sortDir = true;
-
+            string numberpageee = page2;
             if (model.order != null)
             {
                 sortBy = model.columns[model.order[0].column].name;
                 sortDir = model.order[0].dir.ToLower() == "asc";
             }
 
-            var result = await GetDataFromDbase(searchBy, take, skip, model.draw, sortBy, sortDir);
+            var result = await GetDataFromDbase(searchBy, take, skip, page, sortBy, sortDir, numberpageee);
+            //var result = await GetDataFromDbase(searchBy, take, skip, sortBy, sortDir);
+
             if (result == null)
             {
                 return new List<dynamic>();
@@ -69,26 +98,29 @@ namespace FHIR_Demo.Controllers
             return result;
         }
 
-        public async Task<List<dynamic>> GetDataFromDbase(string searchBy, int take, int skip, int page, string sortBy, bool sortDir)
+        //public async Task<List<dynamic>> GetDataFromDbase(string searchBy, int take, int skip, string sortBy, bool sortDir)
+        public async Task<List<dynamic>> GetDataFromDbase(string searchBy, int take, int skip, int page, string sortBy, bool sortDir, string numberpageee)
         {
             sortBy = FHIRSearchParameters_Chagne(DatatablesObjectDisplay_Change(sortBy));
             string q = "";
+            //q += $"_total=accurate&_count={take}&_page={numberpageee}";
             q += $"_total=accurate&_count={take}&_page={page}";
+
             if (SearchParameter_query != null)
-                q += "&"+SearchParameter_query;
+                q += "&" + SearchParameter_query;
 
             if (String.IsNullOrEmpty(searchBy))
             {
-                if (String.IsNullOrEmpty(sortBy)) 
+                if (String.IsNullOrEmpty(sortBy))
                 {
                     sortBy = "_id";
                     sortDir = true;
                 }
             }
             else
-                q+="&_content=" + searchBy ?? "";
+                q += "&_content=" + searchBy ?? "";
 
-            q += "&_sort="+ ((sortDir == true) ? "" : "-")+ sortBy;
+            q += "&_sort=" + ((sortDir == true) ? "" : "-") + sortBy;
 
             Bundle SearchBundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(q, FHIR_Resource));
 
@@ -96,7 +128,7 @@ namespace FHIR_Demo.Controllers
 
             List<dynamic> Resources = new List<dynamic>();
 
-            if (SearchBundle.entry != null) 
+            if (SearchBundle.entry != null)//資料十筆產生處
             {
                 foreach (var entry in SearchBundle.entry)
                 {
@@ -111,10 +143,10 @@ namespace FHIR_Demo.Controllers
             return Resources;
         }
 
-        public string FHIRSearchParameters_Chagne(string parameter) 
+        public string FHIRSearchParameters_Chagne(string parameter)
         {
             parameter = parameter.ToLower();
-            switch (parameter) 
+            switch (parameter)
             {
                 case "id":
                     parameter = "_id";
@@ -153,11 +185,11 @@ namespace FHIR_Demo.Controllers
             return parameter;
         }
 
-        public string DatatablesObjectDisplay_Change (string orderName) 
+        public string DatatablesObjectDisplay_Change(string orderName)
         {
             string Pattern = @"\[, ].+";
             Regex regex = new Regex(Pattern);
-            return regex.Replace(orderName, "")??"";
+            return regex.Replace(orderName, "") ?? "";
         }
     }
 }

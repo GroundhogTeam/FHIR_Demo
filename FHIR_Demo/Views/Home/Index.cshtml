@@ -90,9 +90,7 @@
             <div class="card-header">
                 <h5><b>搜尋結果</b></h5>
             </div>
-            <div class="" style="margin-bottom:10px;">
-                    <input id="myInput" class="form-control col-md-2" type="text" placeholder="Search.." onkeydown=return (event.keyCode!=13)>
-                </div>
+            
 
             <div class="card-block">
                 <div class="table-responsive">
@@ -1210,12 +1208,57 @@
                 $("#" + searchParameter.parameter_name).remove();
             }
         }
+        //$(document).on('click', 'div#cutomerTable_paginate', function () {
+        //    console.log("測試用");
+
+        //    var search_query = $("#search_form").find("div.card-body:not([type=date],[disabled=disabled])").find("input, select").serialize();
+        //    $("#search_form").find("div.card-body[type=date]:not([disabled=disabled])").find(".form-row").each(function (i) {
+        //        if ($("#search_form").find("input[type=checkbox]").is(":checked")) {
+        //            var input_date = $("#search_form").find("input[type=datetime-local]");
+        //            if (search_query != "") {
+        //                search_query = search_query + "&";
+        //            }
+        //            search_query = search_query + input_date.attr("name") + "=" + $("#search_form").find("select").val() + input_date.val();
+        //        }
+        //    });
+        //    //var div_card = $("a.page-link").parents("li.active");
+        //    //var div_card2 = div_card.find("a.page-link").text();
+
+        //    //alert(div_card2);      
+        //    setTimeout(
+        //        function () {
+        //            var div_card = $("a.page-link").parents("li.active");
+        //            var div_card2 = div_card.find("a.page-link").text();
+        //            alert(div_card2);
+
+
+        //    switch (GetUrlToken().resource) {
+        //        case "Patient": Patient(search_query); break;
+        //        case "Practitioner": Practitioner(search_query); break;
+        //        /*new_start*/
+        //        case "Procedure": Procedure(search_query); break;
+        //        case "Condition": Condition(search_query); break;
+        //        case "MedicationRequest": MedicationRequest(search_query); break;
+        //        /*new_end*/
+        //        case "Encounter": Encounter(search_query); break;
+        //        case "Observation": Observation(search_query, div_card2); break;
+        //        case "DiagnosticReport": DiagnosticReport(search_query); break;
+        //        case "ServiceRequest": ServiceRequest(search_query); break;
+
+
+        //    }
+        //    }, 1000);
+
+
+        //    return false;
+
+
+        //});
 
         $("#search_form").submit(function () {
             var search_query = $(this).find("div.card-body:not([type=date],[disabled=disabled])").find("input, select").serialize();
             $(this).find("div.card-body[type=date]:not([disabled=disabled])").find(".form-row").each(function (i) {
-                if ($(this).find("input[type=checkbox]").is(":checked"))
-                {
+                if ($(this).find("input[type=checkbox]").is(":checked")) {
                     var input_date = $(this).find("input[type=datetime-local]");
                     if (search_query != "") {
                         search_query = search_query + "&";
@@ -1223,6 +1266,12 @@
                     search_query = search_query + input_date.attr("name") + "=" + $(this).find("select").val() + input_date.val();
                 }
             });
+            var div_cardstart = $("li.active").parents("div#cutomerTable_paginate");
+            var div_card = $("a.page-link").parents("li.active");
+            var div_card2 = div_card.find("a.page-link").text();
+
+            alert(div_card2);
+
 
             switch (GetUrlToken().resource) {
                 case "Patient": Patient(search_query); break;
@@ -1233,7 +1282,7 @@
                 case "MedicationRequest": MedicationRequest(search_query); break;
                 /*new_end*/
                 case "Encounter": Encounter(search_query); break;
-                case "Observation": Observation(search_query); break;
+                case "Observation": Observation(search_query, div_card2); break;
                 case "DiagnosticReport": DiagnosticReport(search_query); break;
                 case "ServiceRequest": ServiceRequest(search_query); break;
 
@@ -1374,7 +1423,7 @@
             }
 
             var table = $("#cutomerTable").DataTable({
-                "searching": true,
+                "searching": false,
                 "fixedHeader": true,
                 "proccessing": true,
                 "serverSide": true,
@@ -1415,7 +1464,7 @@
             }
 
             var table = $("#cutomerTable").DataTable({
-                "searching": true,
+                "searching": false,
                 "fixedHeader": true,
                 "proccessing": true,
                 "serverSide": true,
@@ -1482,10 +1531,16 @@
             var data = GetUrlToken();
             if (search != null && search != "") {
                 data["search"] = search;
+                alert(data["search"]);
             }
+            //if (div_card2 != null && div_card2 != "") {
+            //    data["div_card2"] = div_card2;
+            //    alert("this is " + data["div_card2"]);
+            //}
+            console.log(data);
 
             var table = $("#cutomerTable").DataTable({
-                "searching": true,
+                "searching": false,
                 "fixedHeader": true,
                 "proccessing": true,
                 "serverSide": true,
@@ -1582,7 +1637,7 @@
             }
 
             var table = $("#cutomerTable").DataTable({
-                "searching": true,
+                "searching": false,
                 "fixedHeader": true,
                 "proccessing": true,
                 "serverSide": true,
@@ -1695,7 +1750,7 @@
             }
 
             var table = $("#cutomerTable").DataTable({
-                "searching": true,
+                "searching": false,
                 "fixedHeader": true,
                 "proccessing": true,
                 "serverSide": true,
@@ -1777,7 +1832,7 @@
             }
 
             var table = $("#cutomerTable").DataTable({
-                "searching": true,
+                "searching": false,
                 "fixedHeader": true,
                 "proccessing": true,
                 "serverSide": true,
@@ -1873,7 +1928,7 @@
             }
 
             var table = $("#cutomerTable").DataTable({
-                "searching": true,
+                "searching": false,
                 "fixedHeader": true,
                 "proccessing": true,
                 "serverSide": true,
@@ -1951,7 +2006,7 @@
             }
 
             var table = $("#cutomerTable").DataTable({
-                "searching": true,
+                "searching": false,
                 "fixedHeader": true,
                 "proccessing": true,
                 "serverSide": true,
