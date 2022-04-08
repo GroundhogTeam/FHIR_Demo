@@ -22,6 +22,7 @@ namespace FHIR_Demo.Controllers
                 resourcetype = res;
                 selerestype = sele;
 
+
                 Bundle Res_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block("_id=" + id, res));
 
 
@@ -94,6 +95,7 @@ namespace FHIR_Demo.Controllers
 
 
                 List<dynamic> Patient_Search_reosurces = new List<dynamic>();
+                ViewBag.Resources = null;
                 if (selerestype != null)
                 {
                     if (patient_id != "" && Res_Bundle.entry.Count > 0)
@@ -252,11 +254,10 @@ namespace FHIR_Demo.Controllers
                                 Patient_Search_reosurces.Add(entry.resource);
                             }
                         }
-
-                        ViewBag.Resources = Patient_Search_reosurces; //左圖的
-                        var asd = JsonConvert.SerializeObject(Patient_Search_reosurces);
-                        return Json(asd);
                     }
+                    ViewBag.Resources = Patient_Search_reosurces; //左圖的
+                    var asd = JsonConvert.SerializeObject(Patient_Search_reosurces);
+                    return Json(asd);
                 }
                 else if (selerestype == null)
                 {
@@ -416,8 +417,8 @@ namespace FHIR_Demo.Controllers
                                 Patient_Search_reosurces.Add(entry.resource);
                             }
                         }
-
                     }
+
                     ViewBag.Resources = Patient_Search_reosurces;
                 }
 

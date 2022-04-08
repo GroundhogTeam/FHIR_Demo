@@ -512,6 +512,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Connect\" />
+    <Folder Include="Views\res\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

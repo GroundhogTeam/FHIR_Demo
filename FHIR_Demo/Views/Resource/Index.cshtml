@@ -473,6 +473,7 @@
                         {
                             <article class="timeline-entry">
                                 <div class="timeline-entry-inner">
+                                    <input id="Patient_id" value="@(res.id.ToString())" hidden="hidden" />
                                     <div class="timeline-icon bg-violet"><i class="fa fa-exclamation"></i></div>
                                     <a href="@Url.Action(res.resourceType.ToString(), new { @id = res.id.ToString()})">
                                         <div class="timeline-label">
@@ -1281,7 +1282,20 @@
                                     <tr>
                                         <th scope="row">服用天數</th>
                                         <td>
-                                            @Res_Search.dispenseRequest.expectedSupplyDuration.value @Res_Search.dispenseRequest.expectedSupplyDuration.unit
+                                            @{
+                                                if (@Res_Search.dispenseRequest.expectedSupplyDuration == null)
+                                                {
+
+                                                    @:無
+                                                    @:無
+
+                                                }
+
+                                                else
+                                                {
+                                                    @Res_Search.dispenseRequest.expectedSupplyDuration.value @Res_Search.dispenseRequest.expectedSupplyDuration.unit
+                                                }
+                                            }
                                         </td>
                                         <td></td>
                                     </tr>
