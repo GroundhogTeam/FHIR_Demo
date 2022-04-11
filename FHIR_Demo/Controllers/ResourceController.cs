@@ -254,6 +254,32 @@ namespace FHIR_Demo.Controllers
                                 Patient_Search_reosurces.Add(entry.resource);
                             }
                         }
+                        else
+                        {
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
+                            //if (Patient_Search_reosurces.Count == 1)
+                            //{
+                            //    Patient_Search_reosurces.Clear();
+                            //}
+                        }
                     }
                     ViewBag.Resources = Patient_Search_reosurces; //左圖的
                     var asd = JsonConvert.SerializeObject(Patient_Search_reosurces);
@@ -416,6 +442,29 @@ namespace FHIR_Demo.Controllers
                             {
                                 Patient_Search_reosurces.Add(entry.resource);
                             }
+                        }
+                        else
+                        {
+                            var patient_query_list = new List<string>();
+                            patient_query_list.Add("_id=" + patient_id);
+                            //patient_query_list.Add("_revinclude=Encounter:patient");
+                            //patient_query_list.Add("_revinclude=Observation:patient");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
+                            //patient_query_list.Add("_revinclude=Procedure:patient");
+                            //patient_query_list.Add("_revinclude=Condition:patient");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_total=accurate");
+
+                            var query = string.Join("&", patient_query_list);
+
+                            Bundle Patient_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(query, "Patient"));
+
+
+                            foreach (var entry in Patient_Bundle.entry)
+                            {
+                                Patient_Search_reosurces.Add(entry.resource);
+                            }
+
                         }
                     }
 
