@@ -104,12 +104,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -126,12 +126,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -148,12 +148,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -170,12 +170,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -192,12 +192,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -214,12 +214,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -236,12 +236,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -258,12 +258,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -293,12 +293,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -315,12 +315,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -337,12 +337,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -359,12 +359,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -381,12 +381,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -403,12 +403,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -425,12 +425,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
@@ -447,12 +447,12 @@ namespace FHIR_Demo.Controllers
                         {
                             var patient_query_list = new List<string>();
                             patient_query_list.Add("_id=" + patient_id);
-                            //patient_query_list.Add("_revinclude=Encounter:patient");
-                            //patient_query_list.Add("_revinclude=Observation:patient");
-                            //patient_query_list.Add("_revinclude=MedicationRequest:patient");
-                            //patient_query_list.Add("_revinclude=Procedure:patient");
-                            //patient_query_list.Add("_revinclude=Condition:patient");
-                            //patient_query_list.Add("_revinclude=DiagnosticReport:patient");
+                            //patient_query_list.Add("_revinclude=Encounter:subject");
+                            //patient_query_list.Add("_revinclude=Observation:subject");
+                            //patient_query_list.Add("_revinclude=MedicationRequest:subject");
+                            //patient_query_list.Add("_revinclude=Procedure:subject");
+                            //patient_query_list.Add("_revinclude=Condition:subject");
+                            //patient_query_list.Add("_revinclude=DiagnosticReport:subject");
                             patient_query_list.Add("_total=accurate");
 
                             var query = string.Join("&", patient_query_list);
