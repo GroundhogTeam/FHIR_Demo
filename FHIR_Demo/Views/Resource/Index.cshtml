@@ -854,7 +854,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">是否過世</th>
+                                    <th scope="row">生存狀態</th>
                                     <td>
                                         @if (Res_Search.deceased != null)
                                         {
@@ -871,7 +871,7 @@
                                         }
                                         else
                                         {
-                                            @:無
+                                            @:未知
                                         }
                                     </td>
                                     <td></td>
@@ -1095,15 +1095,22 @@
                                 <tr>
                                     <th scope="row">處置/手術名稱</th>
                                     <td>
-                                        @if (Res_Search.code == null)
+                                        @if (Res_Search.code != null)
                                         {
-                                            @Res_Search.extension[0].extension[0].valueCodeableConcept.text <br>
-                                            @:說明:@Res_Search.extension[2].extension[0].valueReference.display
-                                        }
-                                        else if (Res_Search.code.coding != null)
-                                        {
-                                            @Res_Search.code.coding[0].display<br>
-                                            @:說明:@Res_Search.code.text
+                                            if (Res_Search.code.coding != null)
+                                            {
+                                                if (Res_Search.code.coding[0].code != null)
+                                                {
+                                                    @Res_Search.code.coding[0].code
+                                                    <br>
+                                                }
+                                                <br>
+                                            }
+                                            if (Res_Search.code.text != null)
+                                            {
+                                                @:說明:@Res_Search.code.text
+                                            }
+
                                         }
                                         else
                                         {
@@ -1134,6 +1141,10 @@
                                             @Res_Search.performer[0].actor.display
                                             @:(Practitioner ID: @(Res_Search.performer[0].actor.reference.ToString().Split('/')[1]))
                                         }
+                                        else
+                                        {
+                                            @:無
+                                        }
                                     </td>
                                     <td></td>
                                 </tr>
@@ -1148,6 +1159,31 @@
                                                 @performedDateTime.Value.ToString("tt hh:mm")
                                             }
                                         }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">處置/手術結果</th>
+                                    <td>
+                                        @if (Res_Search.outcome != null)
+                                        {
+                                            if (Res_Search.outcome.coding != null)
+                                            {
+                                                if (Res_Search.outcome.coding[0].code != null)
+                                                {
+                                                    @Res_Search.outcome.coding[0].code
+                                                }
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
                                     </td>
                                     <td></td>
                                 </tr>
@@ -1156,6 +1192,7 @@
                         </table>
                     </div>
                 }
+
                 else if (Res_Search.resourceType == "Condition")
                 {
                     DateTime? onsetDateTime = null;
