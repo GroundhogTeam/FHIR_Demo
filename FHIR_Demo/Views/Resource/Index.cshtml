@@ -452,9 +452,9 @@
                             <option value="Observation">Observation</option>
                             <option value="Procedure">Procedure</option>
                             <option value="Condition">Condition</option>
-                            <option value="Medication">Medication</option>
+                            @*<option value="Medication">Medication</option>*@
                             <option value="MedicationRequest">MedicationRequest</option>
-                            <option value="MedicationAdministration">MedicationAdministration</option>
+                            @*<option value="MedicationAdministration">MedicationAdministration</option>*@
                             <option value="DiagnosticReport">DiagnosticReport</option>
                             <option value="ServiceRequest">ServiceRequest</option>
                         </select>
@@ -849,6 +849,43 @@
                                                     break;
                                             }
 
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">是否過世</th>
+                                    <td>
+                                        @if (Res_Search.deceased != null)
+                                        {
+                                            switch (Res_Search.gender.ToString())
+                                            {
+                                                case "1":
+                                                    @:存活
+                                                    break;
+                                                case "0":
+                                                    @:死亡
+                                                    break;
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">溝通語言</th>
+                                    <td>
+                                        @if (Res_Search.communication != null)
+                                        {
+                                            @(Res_Search.communication[0].language.text != null ? Res_Search.communication[0].language.text : (Res_Search.communication[0].language.text.ToString()) ?? "無")
+                                        }
+                                        else
+                                        {
+                                            @:無
                                         }
                                     </td>
                                     <td></td>
