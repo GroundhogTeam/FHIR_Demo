@@ -80,18 +80,26 @@ namespace FHIR_Demo.Controllers
                     query_list.Add("_sort=date");
                 }
                 res_detail_query = string.Join("&", query_list);
-
-                Bundle Res_detail_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(res_detail_query, res));
-
-                List<dynamic> Res_detail_list = new List<dynamic>();
-
-                foreach (var entry in Res_detail_Bundle.entry)
+                try
                 {
-                    var entry_res = entry.resource;
-                    Res_detail_list.Add(entry_res);
-                }
+                    Bundle Res_detail_Bundle = JsonConvert.DeserializeObject<Bundle>(await connecthelper.GetandShare_Block(res_detail_query, res));
 
-                ViewBag.Resource_detail = Res_detail_list;
+                    List<dynamic> Res_detail_list = new List<dynamic>();
+
+                    foreach (var entry in Res_detail_Bundle.entry)
+                    {
+                        var entry_res = entry.resource;
+                        Res_detail_list.Add(entry_res);
+                    }
+
+                    ViewBag.Resource_detail = Res_detail_list;
+                }
+                catch
+                {
+                    TempData["message"] = "資料太大伺服器錯誤";
+                    return RedirectToAction("Index", "Home");
+                }
+                
 
 
                 List<dynamic> Patient_Search_reosurces = new List<dynamic>();
