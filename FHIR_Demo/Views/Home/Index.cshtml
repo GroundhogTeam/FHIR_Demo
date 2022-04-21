@@ -41,7 +41,7 @@
                             <label for="ResourceSelect">Resource</label>
                             <select class="form-control" id="ResourceSelect" name="resource">
                                 <option>Patient</option>
-                                <option>Practitioner</option>
+                                @*<option>Practitioner</option>*@
                                 <option>Encounter</option>
                                 <option>Observation</option>
                                 @*new_start*@
@@ -1270,7 +1270,7 @@
             var div_card = $("a.page-link").parents("li.active");
             var div_card2 = div_card.find("a.page-link").text();
 
-            alert(div_card2);
+            //alert(div_card2);
 
 
             switch (GetUrlToken().resource) {
@@ -1335,7 +1335,7 @@
         //alert("1232");
         $('#myInput').on('keyup', function () {
             table.search(this.value).draw();
-            alert("123");
+        //    alert("123");
         //    alert(a);
         });
         $("#ResourceSelect").on("change", function () {
@@ -1357,7 +1357,7 @@
             $("#myInput").on('keyup', function () {
                 table.search(this.value).draw();
                 var a = $("#myInput").text();
-                alert(a);
+                //alert(a);
                 //alert("123");
                 //    alert(a);
             });
@@ -1531,7 +1531,7 @@
             var data = GetUrlToken();
             if (search != null && search != "") {
                 data["search"] = search;
-                alert(data["search"]);
+            //    alert(data["search"]);
             }
             //if (div_card2 != null && div_card2 != "") {
             //    data["div_card2"] = div_card2;
