@@ -64,14 +64,15 @@ namespace FHIR_Demo.Controllers
 
         }
 
-        public async Task<string> Get_MultipleSearch(string a)
+        [HttpGet]
+        public async Task<string> Get_MultipleSearch(string sendalltext)
         {
-            a = Request.Form["sendAlltext"];
-            var url = ConfigurationManager.AppSettings.Get("FHIRMULSEARCHAPI") + a;
+            //a = Request.Form["sendAlltext"];
+            var url = ConfigurationManager.AppSettings.Get("FHIRMULSEARCHAPI") + sendalltext;
             //var Authorization = ConfigurationManager.AppSettings.Get("Authorization");
 
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;//憑證一定要通過
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;//版本
             HttpClient client = new HttpClient(); //請求
             //client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Authorization);
 
@@ -85,14 +86,14 @@ namespace FHIR_Demo.Controllers
 
 
         [HttpPost]
-        public ActionResult Index2(string a) 
+        public async Task<ActionResult> Index2(string sendalltext)
         {
 
-            Get_MultipleSearch(a);
-            return View();
+            var Getomi_json = await Get_MultipleSearch(sendalltext);
+            return Json(Getomi_json);
         }
 
-      
+
         public ActionResult test01()
         {
             return View();
