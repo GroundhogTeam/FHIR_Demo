@@ -2393,7 +2393,11 @@
                   success: function (msg) {
                     /*var a=  JSON.stringify(msg)*/
                       alert(msg);
-                    
+                      alert(typeof msg);
+                      var test = JSON.parse(msg);
+                      alert(typeof test);
+                      alert(test.total);
+                      alert(typeof test.total);
                 },
                   error: function (data) {
                       alert("no");
