@@ -2,6 +2,12 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;//new0609
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -11,8 +17,83 @@ namespace FHIR_Demo.Controllers
     public class HomeController : Controller
     {
         private ConnectHelper connecthelper = new ConnectHelper();
-
+        public static string select_url;
         public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult Index2()
+        {
+            var selectList = new List<SelectListItem>()
+            {
+                new SelectListItem {Text="Patient", Value="value-1" },
+                new SelectListItem {Text="Encounter", Value="value-2" },
+                new SelectListItem {Text="Observation", Value="value-3" },
+                new SelectListItem {Text="Procedure", Value="value-3" },
+                new SelectListItem {Text="Condition", Value="value-3" },
+                new SelectListItem {Text="MedicationRequest", Value="value-3" },
+                new SelectListItem {Text="DiagnosticReport", Value="value-3" },                
+                new SelectListItem {Text="ServiceRequest", Value="value-3" },
+            };
+
+            //預設選擇哪一筆
+            selectList.Where(q => q.Value == "value-2").First().Selected = true;
+
+            ViewBag.SelectList = selectList;
+
+            var selectList222 = new List<SelectListItem>()
+            {
+                new SelectListItem {Text="Patient", Value="value-1" },
+                new SelectListItem {Text="Encounter", Value="value-2" },
+                new SelectListItem {Text="Observation", Value="value-3" },
+                new SelectListItem {Text="Procedure", Value="value-3" },
+                new SelectListItem {Text="Condition", Value="value-3" },
+                new SelectListItem {Text="MedicationRequest", Value="value-3" },
+                new SelectListItem {Text="DiagnosticReport", Value="value-3" },
+                new SelectListItem {Text="ServiceRequest", Value="value-3" },
+            };
+
+            //預設選擇哪一筆
+            selectList222.Where(q => q.Value == "value-2").First().Selected = true;
+
+            ViewBag.SelectList222 = selectList222;
+
+
+            return View();
+
+        }
+
+        public async Task<string> Get_MultipleSearch(string a)
+        {
+            a = Request.Form["sendAlltext"];
+            var url = ConfigurationManager.AppSettings.Get("FHIRMULSEARCHAPI") + a;
+            //var Authorization = ConfigurationManager.AppSettings.Get("Authorization");
+
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            HttpClient client = new HttpClient(); //請求
+            //client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Authorization);
+
+            //var response = await client.GetAsync(url);
+
+            var response = await client.GetAsync(url);
+            var result = response.Content.ReadAsStringAsync().Result;
+            return result;
+          
+        }
+
+
+        [HttpPost]
+        public ActionResult Index2(string a) 
+        {
+
+            Get_MultipleSearch(a);
+            return View();
+        }
+
+      
+        public ActionResult test01()
         {
             return View();
         }
@@ -22,7 +103,7 @@ namespace FHIR_Demo.Controllers
         private int filteredResultsCount;
         private int totalResultsCount;
         private string page2;
-        public async Task<dynamic> GetResource(DataTableAjaxPostModel model, string resource,string search = null,string div_card2=null)
+        public async Task<dynamic> GetResource(DataTableAjaxPostModel model, string resource, string search = null, string div_card2 = null)
         {
             //int pagesize = 10;
             //int pagecurrent = page < 1 ? 1 : page;

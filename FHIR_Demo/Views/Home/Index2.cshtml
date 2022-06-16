@@ -1,0 +1,2412 @@
+﻿<h2>Index2</h2>
+@{
+    ViewBag.Title = "Index2";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string FHIR_url = "";
+    if (Request.Cookies["FHIR_url"] != null)
+    {
+        FHIR_url = Request.Cookies["FHIR_url"].Value;
+    }
+    string FHIR_Token = "";
+    if (Request.Cookies["FHIR_Token"] != null)
+    {
+        FHIR_Token = Request.Cookies["FHIR_Token"].Value;
+    }
+}
+@section Styles{
+    <link href="~/Content/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/Content/FixedHeader/css/fixedHeader.bootstrap4.css" rel="stylesheet" />
+    <style>
+        .dropdown-item-checked::before {
+            position: absolute;
+            left: .4rem;
+            content: '✓';
+            font-weight: 600;
+        }
+
+        .dropdown-menu {
+            max-height: 280px;
+            overflow-y: auto;
+        }
+    </style>
+}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><b>Server Link & Resource</b></h5>
+            </div>
+            <div class="card-block">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="ResourceSelect">Resource</label>
+                            <select class="form-control" id="ResourceSelect" name="resource">
+                                <option>Patient</option>
+                                @*<option>Practitioner</option>*@
+                                <option>Encounter</option>
+                                <option>Observation</option>
+                                @*new_start*@
+                                <option>Procedure</option>
+                                <option>Condition</option>
+                                <option>MedicationRequest</option>
+                                @*new_end*@
+                                <option>DiagnosticReport</option>
+                                <option>ServiceRequest</option>
+                            </select>
+                        </div>
+                        <form name="myForm">
+                            大項：
+                            <select size=5 onChange="renew(this.selectedIndex);" id="sleResource">
+                                <option value="Patient">Patient
+                                <option value="Encounter">Encounter
+                                <option value="Practitioner">Practitioner
+                                <option value="ServiceRequest">ServiceRequest
+                                <option value="DiagnosticReport">DiagnosticReport
+                                <option value="Observation">Observation
+                                <option value="Procedure">Procedure
+                                <option value="Condition">Condition
+                                <option value="MedicationRequest">MedicationRequest
+                            </select>
+
+                            小項：
+                            <select name="member" size=5 class="slesecvalue">
+                                <option value="">請由左方選取大項
+                            </select>
+                            @*文字*@
+                            <input type="text" id="txtWrite" hidden="hidden" />
+                            @*RDB*@
+                            <div id="rdbGender" hidden="hidden">
+                                <input type="radio" id="male" name="gender" value="male">
+                                <label for="male">Male</label><br>
+                                <input type="radio" id="female" name="gender" value="female">
+                                <label for="female">Female</label><br>
+                            </div>
+
+                            <div id="rdbClass" hidden="hidden">
+                                <input type="radio" id="AMB" name="class1" value="AMB">
+                                <label for="AMB">Ambulatory</label><br>
+                                <input type="radio" id="EMER" name="class1" value="EMER">
+                                <label for="female">Emergency</label><br>
+                                <input type="radio" id="FLD" name="class1" value="FLD">
+                                <label for="female">Field</label><br>
+                                <input type="radio" id="HH" name="class1" value="HH">
+                                <label for="female">Home health</label><br>
+                                <input type="radio" id="IMP" name="class1" value="IMP">
+                                <label for="female">Inpatient encounter</label><br>
+                                <input type="radio" id="ACUTE" name="class1" value="ACUTE">
+                                <label for="female">Inpatient acute</label><br>
+                                <input type="radio" id="NONAC" name="class1" value="NONAC">
+                                <label for="female">Inpatient non-acute</label><br>
+                                <input type="radio" id="OBSENC" name="class1" value="OBSENC">
+                                <label for="female">Observation encounter</label><br>
+                                <input type="radio" id="PRENC" name="class1" value="PRENC">
+                                <label for="female">Pre-admission</label><br>
+                                <input type="radio" id="SS" name="class1" value="SS">
+                                <label for="female">Short stay</label><br>
+                                <input type="radio" id="VR" name="class1" value="VR">
+                                <label for="female">Virtual</label><br>
+                            </div>
+
+                            @*日曆*@
+                            <select id="selbigsmall" hidden="hidden">
+                                <option value="eq">等於</option>
+                                <option value="gt">大於</option>
+                                <option value="ge">大於或等於</option>
+                                <option value="lt">小於</option>
+                                <option value="le">小於或等於</option>
+                            </select>
+                            <input type="datetime-local" id="txtDate" hidden="hidden" />
+
+                            <input type="button" id="btnPlus" value="新增" />
+                        </form>
+                        <p>
+                            <input type="text" id="txtAlltext" size="180" />
+                        </p>
+                        <p>
+                            <input type="button" value="送出" id="btnSendmulsearch" size="180" />
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><b>篩選條件</b></h5>
+            </div>
+            <div class="card-block">
+                <div class="btn-group dropright mb-2 mr-2">
+                    <button id="searchParameter" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        搜尋條件
+                    </button>
+                    <div id="dropdown_item" class="dropdown-menu">
+                    </div>
+                </div>
+                @*搜尋*@
+                <form id="search_form">
+                    <div class="row" id="Parameter">
+
+                    </div>
+
+                    <button type="submit" id="Parameter_btn" class="btn btn-glow-dark btn-dark col-12">送出</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><b>搜尋結果</b></h5>
+            </div>
+
+
+            <div class="card-block">
+                <div class="table-responsive">
+                    @*<form class="form-inline mt-2 mt-md-0">
+                            <input id="input1" data-table="order-table" class="light-table-filter form-control mr-sm-2" type="Search" placeholder="Search" aria-label="Search">
+                        </form>*@
+                    @*<input type="search" class="form-control" placeholder="Search Dashboard" aria-label="Search Dashboard">
+                        <div class="drop-down   d-md-none">
+                            <form action="#">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </form>
+                        </div>*@
+
+                    <table id="cutomerTable" class="order-table table-bordered zero-configuration display table table-striped table-hover dataTable text-break" style="width: 100%;" role="grid">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/datatables/dataTables.bootstrap4.min.js"></script>
+    @*<script src="~/Scripts/FixedHeader/js/dataTables.fixedHeader.min.js"></script>*@
+<script type="text/javascript">
+
+        //// 搜尋
+        //$(function () {
+        //    'use strict';
+
+        //    // 建立 LightTableFilter
+        //    var LightTableFilter = (function (Arr) {
+
+        //        var _input;
+
+        //        // 資料輸入事件處理函數
+        //        function _onInputEvent(e) {
+        //            _input = e.target;
+        //            var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
+        //            Arr.forEach.call(tables, function (table) {
+        //                Arr.forEach.call(table.tBodies, function (tbody) {
+        //                    Arr.forEach.call(tbody.rows, _filter);
+        //                });
+        //            });
+        //        }
+
+
+        //        function _filter(row) {
+        //            var text = row.textContent.toLowerCase(),
+        //                val = _input.value.toLowerCase();
+        //            row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+        //        }
+
+        //        return {
+        //            // 初始化函數
+        //            init: function () {
+        //                var inputs = document.getElementsByClassName('light-table-filter');
+        //                Arr.forEach.call(inputs, function (input) {
+        //                    input.oninput = _onInputEvent;
+        //                });
+        //            }
+        //        };
+        //    })(Array.prototype);
+
+        //    // 網頁載入完成後，啟動 LightTableFilter
+        //    document.addEventListener('readystatechange', function () {
+        //        if (document.readyState === 'complete') {
+        //            LightTableFilter.init();
+        //        }
+        //    });
+
+        //})(document);
+
+
+
+
+
+
+
+
+   /*     //------------------*/
+        var baseSiteURL = '@Url.Content("~/")';
+
+        $(document).on('keypress', 'input[type="text"]',
+            function (e) {
+                if (e.which == '13') {
+                    e.preventdefault();
+                }
+            });
+        var parameter_json = [
+            {
+                "resource": "Patient",
+                "searchParameters": [
+                    {
+                        "ch_Name": "identifier",
+                        "parameter_name": "identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "生日",
+                        "parameter_name": "birthdate",
+                        "selected": false,
+                        "input_content": {
+                            "type": "date",
+                            "key": [
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": true
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": false
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                },
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": true
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                }
+                            ]
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "性別",
+                        "parameter_name": "gender",
+                        "selected": false,
+                        "input_content": {
+                            "type": "radio",
+                            "value_list": [
+                                {
+                                    "key": "男生",
+                                    "value": "male"
+                                },
+                                {
+                                    "key": "女生",
+                                    "value": "female"
+                                }
+                            ],
+                            "value": ""
+                        },
+                        "switched": true
+                    }
+                ]
+            },
+            {
+                "resource": "Encounter",
+                "searchParameters": [
+                    {
+                        "ch_Name": "identifier",
+                        "parameter_name": "identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "患者identifier",
+                        "parameter_name": "patient.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "患者性別",
+                        "parameter_name": "patient.gender",
+                        "selected": false,
+                        "input_content": {
+                            "type": "radio",
+                            "value_list": [
+                                {
+                                    "key": "男生",
+                                    "value": "male"
+                                },
+                                {
+                                    "key": "女生",
+                                    "value": "female"
+                                }
+                            ],
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "參與者identifier",
+                        "parameter_name": "practitioner.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "就醫類別",
+                        "parameter_name": "class",
+                        "selected": false,
+                        "input_content": {
+                            "type": "radio",
+                            "value_list": [
+                                {
+                                    "key": "ambulatory",
+                                    "value": "AMB"
+                                },
+                                {
+                                    "key": "emergency",
+                                    "value": "EMER"
+                                },
+                                {
+                                    "key": "field",
+                                    "value": "FLD"
+                                },
+                                {
+                                    "key": "home health",
+                                    "value": "HH"
+                                },
+                                {
+                                    "key": "inpatient encounter",
+                                    "value": "IMP"
+                                },
+                                {
+                                    "key": "inpatient acute",
+                                    "value": "ACUTE"
+                                },
+                                {
+                                    "key": "inpatient non-acute",
+                                    "value": "NONAC"
+                                },
+                                {
+                                    "key": "observation encounter",
+                                    "value": "OBSENC"
+                                },
+                                {
+                                    "key": "pre-admission",
+                                    "value": "PRENC"
+                                },
+                                {
+                                    "key": "short stay",
+                                    "value": "SS"
+                                },
+                                {
+                                    "key": "virtual",
+                                    "value": "VR"
+                                }
+                            ],
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "日期",
+                        "parameter_name": "date",
+                        "selected": false,
+                        "input_content": {
+                            "type": "date",
+                            "key": [
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": true
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": false
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                },
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": true
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                }
+                            ]
+                        },
+                        "switched": true
+                    }
+                ]
+            },
+            {
+                "resource": "Practitioner",
+                "searchParameters": [
+                    {
+                        "ch_Name": "identifier",
+                        "parameter_name": "identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    }
+                ]
+            },
+            {
+                "resource": "ServiceRequest",
+                "searchParameters": [
+                    {
+                        "ch_Name": "identifier",
+                        "parameter_name": "identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "患者identifier",
+                        "parameter_name": "patient.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "患者性別",
+                        "parameter_name": "patient.gender",
+                        "selected": false,
+                        "input_content": {
+                            "type": "radio",
+                            "value_list": [
+                                {
+                                    "key": "男生",
+                                    "value": "male"
+                                },
+                                {
+                                    "key": "女生",
+                                    "value": "female"
+                                }
+                            ],
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "醫師identifier",
+                        "parameter_name": "results-interpreter:Practitioner.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "就診identifier",
+                        "parameter_name": "encounter.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "檢驗項目",
+                        "parameter_name": "code:text",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "開立日期時間",
+                        "parameter_name": "authored",
+                        "selected": false,
+                        "input_content": {
+                            "type": "date",
+                            "key": [
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": true
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": false
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                },
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": true
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                }
+                            ]
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "檢驗日期時間",
+                        "parameter_name": "occurrence",
+                        "selected": false,
+                        "input_content": {
+                            "type": "date",
+                            "key": [
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": true
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": false
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                },
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": true
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                }
+                            ]
+                        },
+                        "switched": true
+                    }
+                ]
+            },
+            {
+                "resource": "DiagnosticReport",
+                "searchParameters": [
+                    {
+                        "ch_Name": "identifier",
+                        "parameter_name": "identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "患者identifier",
+                        "parameter_name": "patient.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "患者性別",
+                        "parameter_name": "patient.gender",
+                        "selected": false,
+                        "input_content": {
+                            "type": "radio",
+                            "value_list": [
+                                {
+                                    "key": "男生",
+                                    "value": "male"
+                                },
+                                {
+                                    "key": "女生",
+                                    "value": "female"
+                                }
+                            ],
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "基於ServiceRequest的identifier",
+                        "parameter_name": "based-on:ServiceRequest.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "就診identifier",
+                        "parameter_name": "encounter.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "參與者identifier",
+                        "parameter_name": "results-interpreter:Practitioner.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "檢驗結果FHIR ID",
+                        "parameter_name": "result",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "報告日期",
+                        "parameter_name": "date",
+                        "selected": false,
+                        "input_content": {
+                            "type": "date",
+                            "key": [
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": true
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": false
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                },
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": true
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                }
+                            ]
+                        },
+                        "switched": true
+                    }
+                ]
+            },
+            {
+                "resource": "Observation",
+                "searchParameters": [
+                    {
+                        "ch_Name": "患者identifier",
+                        "parameter_name": "patient.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "患者性別",
+                        "parameter_name": "patient.gender",
+                        "selected": false,
+                        "input_content": {
+                            "type": "radio",
+                            "value_list": [
+                                {
+                                    "key": "男生",
+                                    "value": "male"
+                                },
+                                {
+                                    "key": "女生",
+                                    "value": "female"
+                                }
+                            ],
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "就診identifier",
+                        "parameter_name": "encounter.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "基於ServiceRequest的identifier",
+                        "parameter_name": "based-on:ServiceRequest.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "發報告日期",
+                        "parameter_name": "date",
+                        "selected": false,
+                        "input_content": {
+                            "type": "date",
+                            "key": [
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": true
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": false
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                },
+                                {
+                                    "oncheck": true,
+                                    "input_content": {
+                                        "type": "select",
+                                        "value_list": [
+                                            {
+                                                "key": "等於(=)",
+                                                "value": "eq",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於(>)",
+                                                "value": "gt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "大於或等於(>=)",
+                                                "value": "ge",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於(<)",
+                                                "value": "lt",
+                                                "status": false
+                                            },
+                                            {
+                                                "key": "小於或等於(<=)",
+                                                "value": "le",
+                                                "status": true
+                                            }
+                                        ],
+                                        "value": ""
+                                    }
+                                }
+                            ]
+                        },
+                        "switched": true
+                    },
+                    {
+                        "ch_Name": "檢驗項目名稱(text)",
+                        "parameter_name": "code:text",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    }
+                ]
+            },
+            {
+                "resource": "Procedure",
+                "searchParameters": [
+                    {
+                        "ch_Name": "identifier",
+                        "parameter_name": "identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    }
+
+                ]
+            },
+            {
+                "resource": "Condition",
+                "searchParameters": [
+                    {
+                        "ch_Name": "患者identifier",
+                        "parameter_name": "patient.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    }
+
+                ]
+            },
+            {
+                "resource": "MedicationRequest",
+                "searchParameters": [
+                    {
+                        "ch_Name": "患者identifier",
+                        "parameter_name": "patient.identifier",
+                        "selected": false,
+                        "input_content": {
+                            "type": "text",
+                            "value": ""
+                        },
+                        "switched": true
+                    }
+
+                ]
+            }
+        ];
+
+
+        SearchParameter(GetUrlToken().resource, null);
+
+        $("#dropdown_item").on("click", ".dropdown-item", function () {
+            SearchParameter(GetUrlToken().resource, $(this));
+        });
+
+        function SearchParameter(resource, element)
+        {
+            $("#dropdown_item").empty();
+            /*new_start*/
+            $("#Parameter").empty();
+            /*new_end*/
+
+            $.each(parameter_json, function (i, item) {
+                if (item.resource == resource)
+                {
+                    $.each(item.searchParameters, function (i, parameter) {
+                        if (element != null) {
+                            if (element.text() == parameter.ch_Name) {
+                                if (parameter.selected == true)
+                                    parameter.selected = false;
+                                else
+                                    parameter.selected = true;
+                            }
+                        }
+                        ParameterCreate(parameter);
+                        $("#dropdown_item").append(
+                            $("<a/>", { "class": "dropdown-item" + (parameter.selected == true ? " dropdown-item-checked":""), "href": "#!", "text": parameter.ch_Name})
+                        );
+                    });
+                }
+            });
+        }
+
+        function ParameterCreate(searchParameter)
+        {
+            var param_div = $("<div/>", { "class": "col-sm-6", "id": (searchParameter.parameter_name) }).append([
+                $("<div/>", { "class": "card text-white bg-secondary" }).append([
+                    $("<div/>", { "class": "card-header d-flex justify-content-between align-items-center" }).append([
+                        $("<h5/>", { "class": "f-w-700 text-white", "text": searchParameter.ch_Name }),
+                        $("<div/>", { "class": "switch switch-warning d-inline m-r-10" }).append([
+                            searchParameter.switched ?
+                                $("<input/>", { "type": "checkbox", "switch":"","id": (searchParameter.parameter_name + "_switch"), "checked": "" })
+                                : $("<input/>", { "type": "checkbox", "switch": "","id": (searchParameter.parameter_name + "_switch") }),
+                            $("<label/>", { "class": "cr", "for": (searchParameter.parameter_name + "_switch") })
+                        ]),
+                    ]),
+                    $("<div/>", { "class": "card-body" })
+                ]),
+            ]);
+
+            if (!searchParameter.switched)
+                param_div.find("div.card-body").attr("disabled", "false");
+
+            if ($("#" + searchParameter.parameter_name).length == 0 && searchParameter.selected) {
+                if (searchParameter.input_content.type == "text") {
+                    param_div.find("div.card-body").attr("type", searchParameter.input_content.type).append($("<div/>", { "class": "form-group" }).append([
+                        $("<label/>", { "text": "匹配值" }),
+                        $("<input/>", { "type": "text", "class": "form-control", /*"parameter-name": searchParameter.parameter_name,*/ "name": searchParameter.parameter_name }),
+                    ]));
+                    $("#Parameter").append(param_div);
+                }
+                else if (searchParameter.input_content.type == "radio") {
+                    $.each(searchParameter.input_content.value_list, function (i, value_list) {
+                        param_div.find("div.card-body").attr("type", searchParameter.input_content.type).append(
+                            $("<div/>", { "class": "form-group d-inline" }).append([
+                                $("<div/>", { "class": "radio radio-info d-inline" }).append([
+                                    $("<input/>", {
+                                        "type": "radio", "id": searchParameter.parameter_name + "_" + value_list.key,
+                                        "name": (searchParameter.parameter_name),
+                                        /*"parameter-name": searchParameter.parameter_name,*/
+                                        "value": value_list.value
+                                    }),
+                                    $("<label/>", { "text": value_list.key, "class": "cr", "for": searchParameter.parameter_name + "_" + value_list.key}),
+                                ])
+                            ])
+                        );
+                    });
+
+                    $("#Parameter").append(param_div);
+                }
+                else if (searchParameter.input_content.type == "date")
+                {
+                    $.each(searchParameter.input_content.key, function (i, key) {
+                        var select = $("<div/>", { "class": "col-md-3"}).append([
+                            $("<select/>", { "class": "form-control", "name": (searchParameter.parameter_name + "_Prefixes") ,"parameter-name": (searchParameter.parameter_name + "_Prefixes") }),
+                        ]);
+                        $.each(key.input_content.value_list, function (i, value_list) {
+                            select.find("select").append(
+                                $("<option/>", { "value": value_list.value, "text": value_list.key})
+                            );
+                            if (value_list.status)
+                                select.find("select").val(value_list.value).change();
+                        });
+                        param_div.find("div.card-body").attr("type", searchParameter.input_content.type).append(
+                            $("<div/>", { "class": "form-row" }).append([
+                                $("<div/>", { "class": "col-md-1" }).append([
+                                    $("<input/>", { "type": "checkbox", "class": "form-control", "checked": "" }),
+                                ]),
+                                select,
+                                $("<div/>", { "class": "col-md-8" }).append([
+                                    $("<input/>", { "type": "datetime-local", "class": "form-control", "parameter-name": searchParameter.parameter_name, "name": searchParameter.parameter_name }),
+                                ]),
+                            ])
+                        );
+                    });
+
+                    $("#Parameter").append(param_div);
+                }
+            }
+            else if ($("#" + searchParameter.parameter_name).length != 0 && !searchParameter.selected)
+            {
+                $("#" + searchParameter.parameter_name).remove();
+            }
+        }
+        //$(document).on('click', 'div#cutomerTable_paginate', function () {
+        //    console.log("測試用");
+
+        //    var search_query = $("#search_form").find("div.card-body:not([type=date],[disabled=disabled])").find("input, select").serialize();
+        //    $("#search_form").find("div.card-body[type=date]:not([disabled=disabled])").find(".form-row").each(function (i) {
+        //        if ($("#search_form").find("input[type=checkbox]").is(":checked")) {
+        //            var input_date = $("#search_form").find("input[type=datetime-local]");
+        //            if (search_query != "") {
+        //                search_query = search_query + "&";
+        //            }
+        //            search_query = search_query + input_date.attr("name") + "=" + $("#search_form").find("select").val() + input_date.val();
+        //        }
+        //    });
+        //    //var div_card = $("a.page-link").parents("li.active");
+        //    //var div_card2 = div_card.find("a.page-link").text();
+
+        //    //alert(div_card2);
+        //    setTimeout(
+        //        function () {
+        //            var div_card = $("a.page-link").parents("li.active");
+        //            var div_card2 = div_card.find("a.page-link").text();
+        //            alert(div_card2);
+
+
+        //    switch (GetUrlToken().resource) {
+        //        case "Patient": Patient(search_query); break;
+        //        case "Practitioner": Practitioner(search_query); break;
+        //        /*new_start*/
+        //        case "Procedure": Procedure(search_query); break;
+        //        case "Condition": Condition(search_query); break;
+        //        case "MedicationRequest": MedicationRequest(search_query); break;
+        //        /*new_end*/
+        //        case "Encounter": Encounter(search_query); break;
+        //        case "Observation": Observation(search_query, div_card2); break;
+        //        case "DiagnosticReport": DiagnosticReport(search_query); break;
+        //        case "ServiceRequest": ServiceRequest(search_query); break;
+
+
+        //    }
+        //    }, 1000);
+
+
+        //    return false;
+
+
+        //});
+
+        $("#search_form").submit(function () {
+            var search_query = $(this).find("div.card-body:not([type=date],[disabled=disabled])").find("input, select").serialize();
+            $(this).find("div.card-body[type=date]:not([disabled=disabled])").find(".form-row").each(function (i) {
+                if ($(this).find("input[type=checkbox]").is(":checked")) {
+                    var input_date = $(this).find("input[type=datetime-local]");
+                    if (search_query != "") {
+                        search_query = search_query + "&";
+                    }
+                    search_query = search_query + input_date.attr("name") + "=" + $(this).find("select").val() + input_date.val();
+                }
+            });
+            var div_cardstart = $("li.active").parents("div#cutomerTable_paginate");
+            var div_card = $("a.page-link").parents("li.active");
+            var div_card2 = div_card.find("a.page-link").text();
+
+            //alert(div_card2);
+
+
+            switch (GetUrlToken().resource) {
+                case "Patient": Patient(search_query); break;
+                case "Practitioner": Practitioner(search_query); break;
+                /*new_start*/
+                case "Procedure": Procedure(search_query); break;
+                case "Condition": Condition(search_query); break;
+                case "MedicationRequest": MedicationRequest(search_query); break;
+                /*new_end*/
+                case "Encounter": Encounter(search_query); break;
+                case "Observation": Observation(search_query, div_card2); break;
+                case "DiagnosticReport": DiagnosticReport(search_query); break;
+                case "ServiceRequest": ServiceRequest(search_query); break;
+
+            }
+            return false;
+        });
+
+        $("#Parameter").on("change", "input[type='checkbox']", function ()
+        {
+            if ($(this).is(':checked')) {
+                $(this).parents(".form-row").find("input[type=datetime-local],select").removeAttr("disabled");
+            }
+            else
+            {
+                $(this).parents(".form-row").find("input[type=datetime-local],select").attr("disabled", "true");
+            }
+        });
+
+        $("#Parameter").on("change", "input[type='checkbox'][switch]", function () {
+            var radio = $(this);
+            var parameter_name = $(this).attr('id').split('_')[0];
+            $.each(parameter_json, function (i, item) {
+                if (item.resource == GetUrlToken().resource)
+                {
+                    $.each(item.searchParameters, function (i, obj) {
+                        if (obj.parameter_name == parameter_name) {
+                            console.log(radio.is(':checked'));
+                            if (radio.is(':checked')) {
+                                obj.switched = true;
+                                radio.parents("div.col-sm-6").find("div.card-body").removeAttr("disabled")
+                            }
+                            else {
+                                obj.switched = false;
+                                radio.parents("div.col-sm-6").find("div.card-body").attr("disabled", "true")
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $('#cutomerTable').tooltip({
+            selector: '.cr_tooltips',
+            html: true
+        });
+
+        //初始畫面
+        Patient();
+        var tttt = $("#cutomerTable").DataTable();
+        //alert("1232");
+        $('#myInput').on('keyup', function () {
+            table.search(this.value).draw();
+        //    alert("123");
+        //    alert(a);
+        });
+        $("#ResourceSelect").on("change", function () {
+            $("#Parameter").empty();
+            SearchParameter(GetUrlToken().resource, null)
+            switch ($(this).val())
+            {
+                case "Patient": Patient(); break;
+                case "Practitioner": Practitioner(); break;
+                case "Encounter": Encounter(); break;
+                case "Observation": Observation(); break;
+                case "Procedure": Procedure(); break;
+                case "Condition": Condition(); break;
+                case "MedicationRequest": MedicationRequest(); break;
+                case "DiagnosticReport": DiagnosticReport(); break;
+                case "ServiceRequest": ServiceRequest(); break;
+            }
+            var table = $("#cutomerTable").DataTable();
+            $("#myInput").on('keyup', function () {
+                table.search(this.value).draw();
+                var a = $("#myInput").text();
+                //alert(a);
+                //alert("123");
+                //    alert(a);
+            });
+
+        });
+
+        function ReBuilddatatable()
+        {
+            if ($.fn.dataTable.isDataTable('#cutomerTable')) {
+                $("#cutomerTable").DataTable().clear().destroy();
+                $("#cutomerTable").empty();
+            }
+        }
+
+        function Patient(search)
+        {
+            ReBuilddatatable();
+            var data = GetUrlToken();
+            if (search != null && search != "") {
+                data["search"] = search;
+            }
+
+            var table = $("#cutomerTable").DataTable({
+                "searching": false,
+                /*欄位置頂*/
+                "fixedHeader": true,
+                "proccessing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("GetResource", "Home")",
+                    "type": "POST",
+                    "data": data,
+                    "datatype": "json"
+                },
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
+                "columns": [
+                    { "data": "id", "name": "id", "title": "id"},
+                    { "data": "identifier[, ].value", "name": "identifier", "title": "Identifier"},
+                    { "data": "name[, ].text", "name": "name", "title": "姓名"},
+                    { "data": "gender", "name": "gender", "title": "性別"},
+                    { "data": "birthDate", "name": "birthdate", "title": "生日"},
+                    {
+                        "data": "id",
+                        "name": "id",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).addClass('text-center');
+                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType+'/'+ oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+                        }
+                    },
+                ]
+            });
+        }
+
+        function Practitioner(search)
+        {
+            ReBuilddatatable();
+            var data = GetUrlToken();
+            if (search != null && search != "") {
+                data["search"] = search;
+            }
+
+            var table = $("#cutomerTable").DataTable({
+                "searching": false,
+                "fixedHeader": true,
+                "proccessing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("GetResource", "Home")",
+                    "type": "POST",
+                    "data": data,
+                    "datatype": "json"
+                },
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
+                "columns": [
+                    { "data": "id", "name": "id", "title": "id"},
+                    { "data": "identifier[, ].value", "name": "identifier", "title": "醫師卡號"},
+                    { "data": "name[, ].text", "name": "name", "title": "姓名"},
+                    { "data": "gender", "name": "gender", "title": "性別"},
+                    { "data": "birthDate", "name": "birthdate", "title": "生日"},
+                    {
+                        "data": "id",
+                        "name": "id",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).addClass('text-center');
+                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType + '/' + oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+                        }
+                    },
+                ]
+            });
+        }
+
+        function Encounter(search)
+        {
+            ReBuilddatatable();
+            var data = GetUrlToken();
+            if (search != null && search != "") {
+                data["search"] = search;
+            }
+
+            var table = $("#cutomerTable").DataTable({
+                "searching": false,
+                "fixedHeader": true,
+                "proccessing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("GetResource", "Home")",
+                    "type": "POST",
+                    "data": data,
+                    "datatype": "json"
+                },
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
+                "columns": [
+                    { "data": "id", "name": "id", "title": "id" },
+                    { "data": "identifier[, ].value", "name": "identifier", "title": "就醫序號" },
+                    {
+                        "data": "subject.reference",
+                        "name": "subject",
+                        "title": "患者ID",
+                        "render": function (data, type, row, meta)
+                        {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "participant[, ].individual.reference",
+                        "name": "participant",
+                        "title": "醫師ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "class.code",
+                        "name": "class",
+                        "title": "就醫類別"
+                    },
+                    {
+                        "data": "period.start",
+                        "name": "date",
+                        "title": "就醫/入院日期時間"
+                    },
+                    {
+                        "data": "period.end",
+                        "name": "date",
+                        "title": "離院/出院日期時間"
+                    },
+                    {
+                        "data": "id",
+                        "name": "id",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).addClass('text-center');
+                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType + '/' + oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+                        }
+                    },
+                ]
+            });
+        }
+
+        function Observation(search)
+        {
+            ReBuilddatatable();
+            var data = GetUrlToken();
+            if (search != null && search != "") {
+                data["search"] = search;
+            //    alert(data["search"]);
+            }
+            //if (div_card2 != null && div_card2 != "") {
+            //    data["div_card2"] = div_card2;
+            //    alert("this is " + data["div_card2"]);
+            //}
+            console.log(data);
+
+            var table = $("#cutomerTable").DataTable({
+                "searching": false,
+                "fixedHeader": true,
+                "proccessing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("GetResource", "Home")",
+                    "type": "POST",
+                    "data": data,
+                    "datatype": "json"
+                },
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
+                "columns": [
+                    { "data": "id", "name": "id", "title": "id" },
+                    {
+                        "data": "subject.reference",
+                        "name": "subject",
+                        "title": "患者ID",
+                        "render": function (data, type, row, meta)
+                        {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "effectiveDateTime",
+                        "name": "date",
+                        "title": "發報告日期"
+                    },
+                    {
+                        "data": "effectiveDateTime",
+                        "name": "date",
+                        "title": "發報告日期"
+                    },
+                    {
+                        "data": "performer.0.reference",
+                        "name": "performer",
+                        "title": "醫師ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "code",
+                        "name": "code",
+                        "title": "檢驗檢查項目",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            if (sData.coding != null)
+                                $(nTd).html(
+                                    '<button type="button" class="btn btn-outline-secondary cr_tooltips disabled" data-toggle="tooltip" data-placement="right" \
+                                    title="<b>system: </b>' + sData.coding[0].system + '<br><b>code: </b>' + sData.coding[0].code + '<br><b>code: </b>' + sData.coding[0].display +'<br>" >\
+                                    ' + sData.coding[0].display ?? sData.coding[0].code  +'</button>'
+                                );
+                            else
+                                $(nTd).html(
+                                    '<button type="button" class="btn btn-outline-secondary disabled" data-placement="right" >\
+                                    ' + sData.text + '</button>'
+                                );
+                        }
+                    },
+                    {
+                        "data": "bodySite.coding.0.code",
+                        "orderable": false,
+                        "title": "檢驗部位",
+                    },
+                    {
+                        "data": "valueQuantity.value",
+                        "name": "value-quantity",
+                        "title": "檢驗值",
+                    },
+                    {
+                        "data": "valueQuantity.unit",
+                        "orderable": false,
+                        "title": "檢驗單位",
+                    },
+                    {
+                        "data": "id",
+                        "name": "id",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).addClass('text-center');
+                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType + '/' + oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+                        }
+                    },
+                ]
+            });
+        }
+
+        function Procedure(search)
+        {
+            ReBuilddatatable();
+            var data = GetUrlToken();
+            if (search != null && search != "") {
+                data["search"] = search;
+            }
+
+            var table = $("#cutomerTable").DataTable({
+                "searching": false,
+                "fixedHeader": true,
+                "proccessing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("GetResource", "Home")",
+                    "type": "POST",
+                    "data": data,
+                    "datatype": "json"
+                },
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
+                "columns": [
+                    { "data": "id", "name": "id", "title": "id" },
+                    {
+                        "data": "status",
+                        "name": "status",
+                        "title": "處置狀態"
+                    },
+                    {
+                        "data": "statusReason.coding.0.code",
+                        "orderable": false,
+                        "title": "處置狀態原因"
+                    },
+                    {
+                        "data": "category.coding.0.code",
+                        "name": "category",
+                        "title": "處置分類"
+                    },
+                    {
+                        "data": "code",
+                        "name": "code",
+                        "title": "處置項目",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            if (sData.coding != null)
+                                $(nTd).html(
+                                    '<button type="button" class="btn btn-outline-secondary cr_tooltips disabled" data-toggle="tooltip" data-placement="right" \
+                                    title="<b>system: </b>' + sData.coding[0].system + '<br><b>code: </b>' + sData.coding[0].code + '<br><b>code: </b>' + sData.coding[0].display + '<br>" >\
+                                    ' + sData.coding[0].display ?? sData.coding[0].code + '</button>'
+                                );
+                            else
+                                $(nTd).html(
+                                    '<button type="button" class="btn btn-outline-secondary disabled" data-placement="right" >\
+                                    ' + sData.text + '</button>'
+                                );
+                        }
+                    },
+                    {
+                        "data": "encounter.reference",
+                        "name": "encounter",
+                        "title": "就醫ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "subject.reference",
+                        "name": "subject",
+                        "title": "患者ID",
+                        "render": function (data, type, row, meta)
+                        {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "asserter.reference",
+                        "name": "subject",
+                        "title": "執行者ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "performedDateTime",
+                        "name": "date",
+                        "title": "執行日期時間/年齡",
+                        "render": function (data, type, row, meta) {
+                            if (data != null)
+                                return data;
+                            else if (row.performedPeriod)
+                                return row.performedPeriod.start + "~" + row.performedPeriod.end;
+                            else if (row.performedAge)
+                                return row.performedAge;
+                        }
+                    },
+                    {
+                        "data": "bodySite.coding.0.code",
+                        "orderable": false,
+                        "title": "處置部位",
+                    },
+                    {
+                        "data": "id",
+                        "name": "id",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).addClass('text-center');
+                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType+'/'+ oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+                        }
+                    },
+                ]
+            });
+        }
+
+        function Condition(search)
+        {
+            ReBuilddatatable();
+            var data = GetUrlToken();
+            if (search != null && search != "") {
+                data["search"] = search;
+            }
+
+            var table = $("#cutomerTable").DataTable({
+                "searching": false,
+                "fixedHeader": true,
+                "proccessing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("GetResource", "Home")",
+                    "type": "POST",
+                    "data": data,
+                    "datatype": "json"
+                },
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
+                "columns": [
+                    { "data": "id", "name": "id", "title": "id" },
+                    {
+                        "data": "encounter.reference",
+                        "name": "encounter",
+                        "title": "就醫ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "subject.reference",
+                        "name": "subject",
+                        "title": "患者ID",
+                        "render": function (data, type, row, meta)
+                        {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "recorder.reference",
+                        "name": "recorder",
+                        "title": "醫師ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "code.coding.0.display",
+                        "name": "code",
+                        "title": "疾病名稱"
+                    },
+                    {
+                        "data": "clinicalStatus.coding.0.code",
+                        "name": "clinical-status",
+                        "title": "疾病狀態"
+                    },
+                    {
+                        "data": "onsetDateTime",
+                        "name": "onset-date",
+                        "title": "發生日期時間"
+                    },
+                    {
+                        "data": "recordedDate",
+                        "name": "recorded-date",
+                        "title": "紀錄日期時間"
+                    },
+                    {
+                        "data": "id",
+                        "name": "id",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).addClass('text-center');
+                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType + '/' + oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+                        }
+                    },
+                ]
+            });
+        }
+
+        function MedicationRequest(search)
+        {
+            ReBuilddatatable();
+            var data = GetUrlToken();
+            if (search != null && search != "") {
+                data["search"] = search;
+            }
+
+            var table = $("#cutomerTable").DataTable({
+                "searching": false,
+                "fixedHeader": true,
+                "proccessing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("GetResource", "Home")",
+                    "type": "POST",
+                    "data": data,
+                    "datatype": "json"
+                },
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
+                "columns": [
+                    { "data": "id", "name": "id", "title": "id" },
+                    {
+                        "data": "status",
+                        "name": "status",
+                        "title": "藥囑狀態"
+                    },
+                    {
+                        "data": "intent",
+                        "name": "intent",
+                        "title": "藥囑種類"
+                    },
+                    {
+                        "data": "medicationReference.reference",
+                        "name": "medication",
+                        "title": "藥物代碼",
+                        "render": function (data, type, row, meta) {
+                            if (data != null)
+                                return data != null ? data.split('/')[1] : data;
+                            else
+                                return row.medicationCodeableConcept.coding[0].display;
+                        }
+                    },
+                    {
+                        "data": "encounter.reference",
+                        "name": "encounter",
+                        "title": "就醫ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "category.0.coding.0.code",
+                        "name": "category",
+                        "title": "就醫類別",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "subject.reference",
+                        "name": "subject",
+                        "title": "患者ID",
+                        "render": function (data, type, row, meta)
+                        {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "requester.reference",
+                        "name": "requester",
+                        "title": "開藥醫師ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "authoredOn",
+                        "name": "date",
+                        "title": "處方日期時間"
+                    },
+                    {
+                        "data": "id",
+                        "name": "id",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).addClass('text-center');
+                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType + '/' + oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+                        }
+                    },
+                ]
+            });
+        }
+
+        function DiagnosticReport(search)
+        {
+            ReBuilddatatable();
+            var data = GetUrlToken();
+            if (search != null && search != "") {
+                data["search"] = search;
+            }
+
+            var table = $("#cutomerTable").DataTable({
+                "searching": false,
+                "fixedHeader": true,
+                "proccessing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("GetResource", "Home")",
+                    "type": "POST",
+                    "data": data,
+                    "datatype": "json"
+                },
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
+                "columns": [
+                    { "data": "id", "name": "id", "title": "id" },
+                    { "data": "identifier[, ].value", "name": "identifier", "title": "申請序號" },
+                    {
+                        "data": "subject.reference",
+                        "name": "subject",
+                        "title": "患者ID",
+                        "render": function (data, type, row, meta)
+                        {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "encounter.reference",
+                        "name": "encounter",
+                        "title": "就醫ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "result.reference",
+                        "orderable": false,
+                        "title": "報告結果ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "effectiveDateTime",
+                        "name": "date",
+                        "title": "報告日期"
+                    },
+                    {
+                        "data": "code.coding.0.display",
+                        "name": "code",
+                        "title": "檢驗項目"
+                    },
+                    {
+                        "data": "code.coding.0.code",
+                        "name": "code",
+                        "title": "檢驗項目(Loinc)"
+                    },
+                    {
+                        "data": "id",
+                        "name": "id",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).addClass('text-center');
+                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType+'/'+ oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+                        }
+                    },
+                ]
+            });
+        }
+
+        function ServiceRequest(search)
+        {
+            ReBuilddatatable();
+            var data = GetUrlToken();
+            if (search != null && search != "") {
+                data["search"] = search;
+            }
+
+            var table = $("#cutomerTable").DataTable({
+                "searching": false,
+                "fixedHeader": true,
+                "proccessing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("GetResource", "Home")",
+                    "type": "POST",
+                    "data": data,
+                    "datatype": "json"
+                },
+                "columnDefs": [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
+                "columns": [
+                    { "data": "id", "name": "id", "title": "id" },
+                    { "data": "identifier[, ].value", "name": "identifier", "title": "申請序號" },
+                    {
+                        "data": "subject.reference",
+                        "name": "subject",
+                        "title": "患者ID",
+                        "render": function (data, type, row, meta)
+                        {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "requester.reference",
+                        "name": "requester",
+                        "title": "醫師ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "encounter.reference",
+                        "name": "encounter",
+                        "title": "就醫ID",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "code.coding[0].code",
+                        "name": "code",
+                        "title": "檢驗項目",
+                        "render": function (data, type, row, meta) {
+                            return data != null ? data.split('/')[1] : data;
+                        }
+                    },
+                    {
+                        "data": "authoredOn",
+                        "name": "date",
+                        "title": "開立日期時間"
+                    },
+                    {
+                        "data": "occurrenceDateTime",
+                        "name": "date",
+                        "title": "檢驗日期時間"
+                    },
+                    {
+                        "data": "id",
+                        "name": "id",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).addClass('text-center');
+                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType+'/'+ oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+                        }
+                    },
+                ]
+            });
+        }
+
+        function GetUrlToken()
+        {
+            var data = {};
+            //data.url = $("#FHIR_url").val();
+            //data.token = $("#FHIR_Token").val();
+            data.resource = $("#ResourceSelect").val();
+            return data;
+        }
+
+
+
+        /*new0609*/
+        department = new Array();
+        department[0] = ["identifier", "birthdate", "gender"];//Patient
+        department[1] = ["identifier", "class", "date"];// Encounter
+        department[2] = ["identifier", "name", "gender"];// practitioner
+        department[3] = ["identifier", "authored", "occurrence"];// servicerequest
+        department[4] = ["identifier", "code", "result","date"];// diagnosticreport
+        department[5] = ["identifier", "code", "date"];// observation
+        department[6] = ["identifier", "code", "bodySite"];// procedure
+        department[7] = ["identifier", "code", "bodySite"];// condition
+        department[8] = ["identifier", "authored"];// medicationrequest
+
+
+
+
+
+        function renew(index) {
+            for (var i = 0; i < department[index].length; i++)
+                document.myForm.member.options[i] = new Option(department[index][i], department[index][i]);	// 設定新選項
+            document.myForm.member.length = department[index].length;	// 刪除多餘的選項
+            //$('#txtWrite').attr('hidden', true);
+            //$('#rdbGender').attr('hidden', true);
+            //$('#txtDate').attr('hidden', true);
+
+        }
+        $("#sleResource").click(function () {
+            $("#sleResource option:selected").val();
+        })
+        //起始的
+        $(".slesecvalue").change(function () {
+            var secvalue = $(".slesecvalue").val();
+            $('#txtWrite').val("");
+            $('#txtDate').val("");
+            if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "bodySite") {
+                //alert("文字");
+                $('#txtWrite').removeAttr('hidden');
+                $('#txtDate').attr('hidden', true);
+                $('#rdbGender').attr('hidden', true);
+                $('#rdbClass').attr('hidden', true);
+                $('#selbigsmall').attr('hidden', true);
+
+            }
+            else if (secvalue == "gender") {
+                //alert("rdb");
+                $('#rdbClass').attr('hidden', true);
+                $('#rdbGender').removeAttr('hidden');
+                $('#txtDate').attr('hidden', true);
+                $('#txtWrite').attr('hidden', true);
+                $('#selbigsmall').attr('hidden', true);
+
+/*                var abc = $('input[name="gender"]:checked').val();*/
+            }
+            else if (secvalue == "class") {
+                $('#rdbClass').removeAttr('hidden');
+                $('#rdbGender').attr('hidden', true);
+                $('#txtDate').attr('hidden', true);
+                $('#txtWrite').attr('hidden', true);
+                $('#selbigsmall').attr('hidden', true);
+            }
+            else if (secvalue == "authored" || secvalue == "occurrence" || secvalue == "date" || secvalue =="birthdate")
+            {
+                //alert("日期");
+                $('#txtDate').removeAttr('hidden');
+                $('#selbigsmall').removeAttr('hidden');
+                $('#rdbGender').attr('hidden', true);
+                $('#rdbClass').attr('hidden', true);
+                $('#txtWrite').attr('hidden', true);
+            }
+            var resource_secvalue = $(".slesecvalue").val();
+        });
+        $("#btnPlus").click(function () {
+            addipno()
+        })
+
+        // 新增細項
+        function addipno() {
+            //var abc = $("#sleResource option:selected").val() + $(".slesecvalue").val();
+            var resourcevalue = $("#sleResource option:selected").val();
+            var resource_secvalue = $(".slesecvalue").val();
+            var extention = ":patient:";
+
+            /*0614起始*/
+            var secvalue = $(".slesecvalue").val();
+            if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "bodySite") {
+                //文字
+                var txtwriting = $("#txtWrite").val();
+            }
+            else if (secvalue == "gender") {
+                //選項
+                var txtwriting = $('input[name="gender"]:checked').val();
+                //alert("性別" + txtwriting);
+
+            }
+            else if (secvalue == "class") {
+                //選項
+                var txtwriting = $('input[name="class1"]:checked').val();
+                //alert("性別" + txtwriting);
+
+            }
+            else if (secvalue == "authored" || secvalue == "occurrence" || secvalue == "date" || secvalue == "birthdate") {
+                //日曆
+                var equdate = $("#selbigsmall option:selected").val();
+                var txtwriting = equdate+$("#txtDate").val();
+                /*var txtdel = "-T";*/
+                //alert(txtwriting);
+
+
+            }
+            /*0614結束*/
+
+
+
+
+            if (resourcevalue == "Patient" && resource_secvalue != "") {
+                //var abc = resourcevalue + resource_secvalue +"="+ txtwriting;
+                var lblPatient = resource_secvalue + "=" + txtwriting;
+                var abc = resource_secvalue + "=" + txtwriting;
+                //alert("1");
+
+            }
+            else if (resourcevalue == "Patient" && resource_secvalue == "") {
+                alert("有誤");
+            }
+            else {
+                var abc = resourcevalue + extention + resource_secvalue + "=" + txtwriting;
+                var lblPatient = resource_secvalue
+                //alert("2");
+
+            }
+
+            //if (resourcevalue == "Patient" && resource_secvalue != "") {
+            //    var lblPatient = resource_secvalue + "="
+            //    alert("第一關");
+
+            //}
+            //else if (resourcevalue == "Patient" && resource_secvalue == "") {
+            //    alert("有誤");
+            //}
+            //else
+            //{
+            //    var lblPatient = resource_secvalue
+            //}
+
+            var text = $("#txtAlltext").val();
+
+            //alert(text);
+            //alert(text_str);
+
+            if (abc != "") {
+                if (text == "") {
+                    /*第一回*/
+                    if (resourcevalue == "Patient") {
+                        //alert("hellomoto")
+                        var lblstart = "Patient?" + lblPatient; //lblPatient是上面的
+                        $("#txtAlltext").val(lblstart);
+                    //    alert("1");
+                    }
+                    else {
+                        var lblstart = "Patient?_has:" + abc
+                        $("#txtAlltext").val(lblstart);
+                    }
+
+
+                } else {
+                    /*第一回之後*/
+                    var str = new Array(text);
+                    //alert("str1111=" + str)
+                    //var str = text.split("&_has:");
+
+                    if (str.indexOf(abc) == -1) {
+                        // 比對是否有一樣的項目 -1表示不存在
+                        str.push(abc);
+                    }
+
+
+
+                    var toAppend = "";
+                    for (i = 0; i < str.length; i++) {
+                        //alert("str2222=" + str);
+                        if (i == 0) {
+
+                        }
+                        else {
+
+                            if (resourcevalue == "Patient") {
+                                toAppend += "&"; /*+ lblPatient;*/
+
+                            } else {
+                                toAppend += '&_has:';
+
+                            }
+                        }
+                        toAppend += str[i];
+                    //    alert("最後" + toAppend);
+                    }
+                    $("#txtAlltext").val(toAppend);
+                    //alert(str);
+                }
+            }
+       
+        }
+        /*new0609*/
+
+
+        /*new0615起始*/
+        $("#btnSendmulsearch").click(function () {
+            var sendAlltext = $("#txtAlltext").val();
+            @*$.ajax({
+            url: '@Url.Action("Index2", "Home")',
+            type: 'POST',
+            data: {
+                sendalltext: sendAlltext
+                },
+                success: function (a) {
+                    alert("aa"+a);
+                }
+            });*@
+
+              $.ajax({
+                type: 'POST',
+                url: "@Url.Action("Index2", "Home")",
+                  data: {
+                      sendalltext: sendAlltext
+                  },
+                type: "POST",
+                dataType: "json",
+                success: function (msg) {
+                    alert(msg);
+                    
+                },
+                  error: function (data) {
+                      alert("no");
+                },
+                beforeSend: function () {
+                    $('.loadingdiv').show();
+                },
+                complete: function () {
+                    $('.loadingdiv').hide();
+                }
+            });
+
+
+        })
+        /*new0615結束*/
+</script>
+}
