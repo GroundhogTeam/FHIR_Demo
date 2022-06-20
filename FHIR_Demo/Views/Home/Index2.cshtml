@@ -13,6 +13,7 @@
     {
         FHIR_Token = Request.Cookies["FHIR_Token"].Value;
     }
+    }
 }
 @section Styles{
     <link href="~/Content/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
@@ -31,7 +32,7 @@
         }
     </style>
 }
-<div class="row">
+<div class="row" id="myCourses">
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header">
@@ -122,7 +123,7 @@
                             <input type="button" id="btnPlus" value="新增" />
                         </form>
                         <p>
-                            <input type="text" id="txtAlltext" size="180" readonly="readonly"/>
+                            <input type="text" id="txtAlltext" size="180" readonly="readonly" />
                         </p>
                         <p>
                             <input type="button" value="送出" id="btnSendmulsearch" size="180" />
@@ -2162,7 +2163,15 @@
             return data;
         }
 
+        function GetUrl2() {
+            var data = {};
+            //data.url = $("#FHIR_url").val();
+            //data.token = $("#FHIR_Token").val();
+            data.entry = "entry";
+            alert(data);
+            return data;
 
+        }
 
         /*new0609*/
         department = new Array();
@@ -2363,7 +2372,7 @@
                     //alert(str);
                 }
             }
-       
+
         }
         /*new0609*/
 
@@ -2371,33 +2380,178 @@
         /*new0615起始*/
         $("#btnSendmulsearch").click(function () {
             var sendAlltext = $("#txtAlltext").val();
-            @*$.ajax({
-            url: '@Url.Action("Index2", "Home")',
-            type: 'POST',
-            data: {
-                sendalltext: sendAlltext
-                },
-                success: function (a) {
-                    alert("aa"+a);
-                }
-            });*@
-
+            //var data2 = GetUrl2();
               $.ajax({
                 type: 'POST',
                 url: "@Url.Action("Index2", "Home")",
                   data: {
                       sendalltext: sendAlltext
                   },
-                type: "POST",
+                //type: "POST",
                 dataType: "json",
-                  success: function (msg) {
+                  success: function (data) {//第一層
                     /*var a=  JSON.stringify(msg)*/
-                      alert(msg);
-                      alert(typeof msg);
-                      var test = JSON.parse(msg);
-                      alert(typeof test);
-                      alert(test.total);
-                      alert(typeof test.total);
+                      //alert(msg);
+                      var test2 = JSON.parse(data);
+
+                      alert(typeof data);
+                      alert(typeof test2);//現在是物件
+                      //alert("第一層:" + Object.keys(test2));
+                      //alert("第二層" + Object.keys(test2.meta));
+                      //alert("第二層的值" + Object.entries(test2.meta));
+                      ReBuilddatatable();
+
+                      if (test2 != null) {
+                          alert("有值");
+                          var newHtml = "";
+                          $.each(test2.entry, function (index, entry) {
+                              //alert("1");
+                              alert(entry.resource.resourceType);
+                              alert(entry.resource.id);
+                              alert(entry.resource.text.status);
+
+                              newHtml += '<li><div class="row"><div class="col-md-5" style="background-color:cornsilk">< div class="map-panel-box-general" > ';
+                              newHtml += '<p>' + entry.resource.resourceType + '</p>';
+                              alert("1.2")
+                              /*                        newHtml += '<p>' + course.Name + '</p>';*/
+                              if (course.User != null) {
+                                  alert("2");
+                                  newHtml += '<p>User Id ' + course.User.Id + '</p>';
+                                  newHtml += '<p>User name ' + course.User.Username + '</p>';
+                              }
+                              else {
+                              //    alert("2.1");
+                              }
+                              newHtml += '</li>';
+                          });
+                          //alert(newHtml);
+                          $("#myCourses").html(newHtml);
+                      } else
+                      {
+                          //alert("3");
+                      }
+
+
+
+
+                      //alert("第二層的值" + Object.entries(test2.entry));
+
+                      ////alert("第三層" + Object.fromEntries(test2.entry));
+                      ////alert("第三的值" + Object.entries(test2.entry));
+                      //alert(Object.entries(test2));
+
+                      //alert("test2.id=" + whichIsVisible().test2.entry);
+
+                      //alert(test2.entry.identifier);
+                      //if (alert(test2.find(element => element = "entry"))) {
+                      //    alert("有找到");
+                      //} else
+                      //{
+                      //    alert("沒找到");
+                      //}
+
+                      //if (msg.indexOf("entry") != -1) {
+                      //    alert("有找到");
+
+                      //}
+
+
+                      //alert(test2.indexOf('entry'));
+                      //alert("test2.identifier=" + test2.entry[0].identifier);
+                      //alert("test2.gender=" + test2.entry[0].gender);
+                      //alert("test2.birthDate=" + test2.entry[0].birthDate);
+                      //var resource = [
+                      //    {
+                      //        "id": test2.id
+                      //        //,
+                      //        //"identifier": test2.identifier,
+                      //        //"gender": test2.gender,
+                      //        //"birthDate": test2.birthDate
+                      //    }
+                      //];
+
+
+
+
+                      @*//0617測試start
+                $("#cutomerTable").DataTable({
+                searching: false,
+                /*欄位置頂*/
+                fixedHeader: true,
+               proccessing: true,
+                serverSide: true,
+                ajax: {
+                    url: "@Url.Action("Index2", "Home")",
+                    type: "POST",
+                    data: data2,
+                    datatype: "json"
+                },
+                columnDefs: [{
+                    targets: '_all',
+                    defaultContent: ""
+                }],
+                columns: [
+                    { "data": "id", "name": "id", "title": "id"},
+                    { "data": "identifier[, ].value", "name": "identifier", "title": "Identifier"},
+                    { "data": "name[, ].text", "name": "name", "title": "姓名"},
+                    { "data": "gender", "name": "gender", "title": "性別"},
+                    { "data": "birthDate", "name": "birthdate", "title": "生日"},
+                    {
+                        "data": "id",
+                        "name": "id",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).addClass('text-center');
+                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType+'/'+ oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+                        }
+                    },
+                ]
+            });
+                      //0617測試end*@
+
+
+
+                      @*var table = $("#cutomerTable").DataTable({
+                          data: data,
+                searching: false,
+                /*欄位置頂*/
+                fixedHeader: true,
+                proccessing: true,
+                serverSide: true,
+                "ajax": {
+                    "url": "@Url.Action("Index2", "Home")",
+                              "type": "POST",
+                              "data": {
+                          sendalltext: sendAlltext
+                      },
+                    "datatype": "json",
+                    success: function (msg) {
+                        /*var a=  JSON.stringify(msg)*/
+                        alert(msg);
+                        alert(typeof msg);
+                        var test2 = JSON.parse(msg);
+                        alert(typeof test2);
+                        alert("test2.id" + test2.id);
+                        alert("test2.identifier" + test2.identifier);
+                        alert("test2.gender" + test2.gender);
+                        alert("test2.birthDate" + test2.birthDate);
+
+                        alert(typeof test2.total);
+
+                        /*0617測試開始*/
+                    }
+                },
+                columnDefs: [{
+                    "targets": '_all',
+                    "defaultContent": ""
+                }],
+                          columns: [
+                              { data: 'id' }
+
+                ]
+            });*@
+
+
+
                 },
                   error: function (data) {
                       alert("no");
@@ -2410,8 +2564,76 @@
                 }
             });
 
+            @*$.ajax({
+                type: 'POST',
+                url: "@Url.Action("Index2", "Home")",
+                data: {
+                    sendalltext: sendAlltext
+                },
+                type: "POST",
+                dataType: "json",
+                success: OnSuccess,
+                success: function (msg)
+                {
+                    ReBuilddatatable();
+                    var test2 = JSON.parse(msg);
+
+                    $('#cutomerTable').DataTable({
+                        processing: true,
+                        serverSide: true,
+
+                        ajax: {
+                            url: "@Url.Action("Index2", "Home")",
+                            type: 'POST',
+                            data: {
+                                sendalltext: sendAlltext
+                            },
+                        },
+                        columns: [
+                             { "data": "id", "name": "id", "title": "id" },
+//                    { "data": "identifier[, ].value", "name": "identifier", "title": "Identifier" }
+                        ],
+                    });
+                },
+                  error: function (data) {
+                      alert("no");
+                },
+                beforeSend: function () {
+                    $('.loadingdiv').show();
+                },
+                complete: function () {
+                    $('.loadingdiv').hide();
+                }
+            });*@
+
+
 
         })
+
+    function OnSuccess(response) {
+        ReBuilddatatable();
+
+
+        $("#cutomerTable").DataTable(
+            {
+                bLengthChange: true,
+                bFilter: true,
+                bSort: true,
+                bPaginate: true,
+                data: response,
+                columns: [
+                    { "data": "id", "name": "id", "title": "id" },
+                    { "data": "identifier[, ].value", "name": "identifier", "title": "Identifier" }
+                    /*,*/
+/*                    { 'data': 'type' }*/
+                //    ,
+                //{ 'data': 'City' },
+                //    { 'data': 'Country' }
+                ]
+            });
+    };
+
+
         /*new0615結束*/
 </script>
 }
