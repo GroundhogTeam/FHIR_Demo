@@ -13,7 +13,7 @@
     {
         FHIR_Token = Request.Cookies["FHIR_Token"].Value;
     }
-    }
+
 }
 @section Styles{
     <link href="~/Content/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
@@ -32,20 +32,20 @@
         }
     </style>
 }
-<div class="row" id="myCourses">
+<div class="row">
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header">
-                <h5><b>Server Link & Resource</b></h5>
+                <h5><b>篩選多重條件</b></h5>
             </div>
             <div class="card-block">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="form-group">
+                        <div class="form-group" hidden="hidden">
                             <label for="ResourceSelect">Resource</label>
                             <select class="form-control" id="ResourceSelect" name="resource">
                                 <option>Patient</option>
-                                @*<option>Practitioner</option>*@
+                                <option>Practitioner</option>
                                 <option>Encounter</option>
                                 <option>Observation</option>
                                 @*new_start*@
@@ -58,76 +58,139 @@
                             </select>
                         </div>
                         <form name="myForm">
-                            大項：
-                            <select size=5 onChange="renew(this.selectedIndex);" id="sleResource">
-                                <option value="Patient">Patient
-                                <option value="Encounter">Encounter
-                                <option value="Practitioner">Practitioner
-                                <option value="ServiceRequest">ServiceRequest
-                                <option value="DiagnosticReport">DiagnosticReport
-                                <option value="Observation">Observation
-                                <option value="Procedure">Procedure
-                                <option value="Condition">Condition
-                                <option value="MedicationRequest">MedicationRequest
-                            </select>
+                            <div class="container">
+                                <div class="row">
+                                    @*<div class="card" style="font-size:larger">*@
+                                    <div class="form-group">
+                                    Resource：
+                                        <select class="form-control" onChange="renew(this.selectedIndex);" id="sleResource">
+                                            <option value="Patient" id="p1">Patient
+                                            <option value="Encounter">Encounter
+                                            <option value="Practitioner">Practitioner
+                                            <option value="ServiceRequest">ServiceRequest
+                                            <option value="DiagnosticReport">DiagnosticReport
+                                            <option value="Observation">Observation
+                                            <option value="Procedure">Procedure
+                                            <option value="Condition">Condition
+                                            <option value="MedicationRequest">MedicationRequest
+                                        </select>
+                                    </div>
+                                    @*</div>*@
+                                    <div style="margin-left: 20px;"></div>
+                                    @*<div class="card" style="font-size:larger">*@
+                                    <div class="form-group">
+                                        Search Parameters：
+                                     @*<div class="form-group">*@
+                                        <select name="member" class="slesecvalue form-control">
+                                            <option value="">請由左方選取大項
+                                        </select>
+                                    </div>
 
-                            小項：
-                            <select name="member" size=5 class="slesecvalue">
-                                <option value="">請由左方選取大項
-                            </select>
-                            @*文字*@
-                            <input type="text" id="txtWrite" hidden="hidden" />
-                            @*RDB*@
-                            <div id="rdbGender" hidden="hidden">
-                                <input type="radio" id="male" name="gender" value="male">
-                                <label for="male">Male</label><br>
-                                <input type="radio" id="female" name="gender" value="female">
-                                <label for="female">Female</label><br>
-                            </div>
+                                    @*</div>*@
+                                    <div class="d-flex align-items-center" style="font-size: larger; margin-left: 20px;">
+                                        @*文字*@
+                                        <input type="text" id="txtWrite" hidden="hidden" class="form-control" placeholder="請輸入值" />
+                                    </div>
+                                    @*RDB*@
+                                    @*<div class="d-flex align-items-center col-md-3" style="font-size: larger; background-color:aqua">*@
+                                    <div class="d-flex align-items-center">
+                                        @*不能加col*@
+                                        <div id="rdbGender" hidden="hidden" class="" style="font-size: large; margin-left: 10px;">
+                                            @*不能加d-flex*@
+                                            <div class="row">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="male" name="gender" value="male">
+                                                    <label class="form-check-label" for="male">Male</label><br>
+                                                </div>
 
-                            <div id="rdbClass" hidden="hidden">
-                                <input type="radio" id="AMB" name="class1" value="AMB">
-                                <label for="AMB">Ambulatory</label><br>
-                                <input type="radio" id="EMER" name="class1" value="EMER">
-                                <label for="female">Emergency</label><br>
-                                <input type="radio" id="FLD" name="class1" value="FLD">
-                                <label for="female">Field</label><br>
-                                <input type="radio" id="HH" name="class1" value="HH">
-                                <label for="female">Home health</label><br>
-                                <input type="radio" id="IMP" name="class1" value="IMP">
-                                <label for="female">Inpatient encounter</label><br>
-                                <input type="radio" id="ACUTE" name="class1" value="ACUTE">
-                                <label for="female">Inpatient acute</label><br>
-                                <input type="radio" id="NONAC" name="class1" value="NONAC">
-                                <label for="female">Inpatient non-acute</label><br>
-                                <input type="radio" id="OBSENC" name="class1" value="OBSENC">
-                                <label for="female">Observation encounter</label><br>
-                                <input type="radio" id="PRENC" name="class1" value="PRENC">
-                                <label for="female">Pre-admission</label><br>
-                                <input type="radio" id="SS" name="class1" value="SS">
-                                <label for="female">Short stay</label><br>
-                                <input type="radio" id="VR" name="class1" value="VR">
-                                <label for="female">Virtual</label><br>
-                            </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="female" name="gender" value="female">
+                                                    <label class="form-check-label" for="female">Female</label><br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*</div>*@
+                                    <div class="d-flex align-items-center">
+                                        <div id="rdbClass" hidden="hidden" class="" style="font-size: large; margin-left: 10px;">
+                                            <div class="row">
+                                                <div class="form-check" style="font-size: large; margin-left: 10px;">
+                                                    <input class="form-check-input" type="radio" id="AMB" name="class1" value="AMB">
+                                                    <label class="form-check-label" for="AMB">Ambulatory</label><br>
+                                                    <input class="form-check-input" type="radio" id="EMER" name="class1" value="EMER">
+                                                    <label class="form-check-label" for="EMER">Emergency</label><br>
+                                                    <input class="form-check-input" type="radio" id="FLD" name="class1" value="FLD">
+                                                    <label class="form-check-label" for="FLD">Field</label><br>
+                                                </div>
+                                                <div class="form-check" style="font-size: large; margin-left: 10px;">
+                                                    <input class="form-check-input" type="radio" id="HH" name="class1" value="HH">
+                                                    <label class="form-check-label" for="HH">Home health</label><br>
+                                                    <input class="form-check-input" type="radio" id="IMP" name="class1" value="IMP">
+                                                    <label class="form-check-label" for="IMP">Inpatient encounter</label><br>
+                                                    <input class="form-check-input" type="radio" id="ACUTE" name="class1" value="ACUTE">
+                                                    <label class="form-check-label" for="ACUTE">Inpatient acute</label><br>
+                                                </div>
+                                                <div class="form-check" style="font-size: large; margin-left: 10px;">
+                                                    <input class="form-check-input" type="radio" id="NONAC" name="class1" value="NONAC">
+                                                    <label class="form-check-label" for="NONAC">Inpatient non-acute</label><br>
+                                                    <input class="form-check-input" type="radio" id="OBSENC" name="class1" value="OBSENC">
+                                                    <label class="form-check-label" for="OBSENC">Observation encounter</label><br>
+                                                    <input class="form-check-input" type="radio" id="PRENC" name="class1" value="PRENC">
+                                                    <label class="form-check-label" for="PRENC">Pre-admission</label><br>
+                                                </div>
+                                                <div class="form-check" style="font-size: large; margin-left: 10px;">
+                                                    <input class="form-check-input" type="radio" id="SS" name="class1" value="SS">
+                                                    <label class="form-check-label" for="SS">Short stay</label><br>
+                                                    <input class="form-check-input" type="radio" id="VR" name="class1" value="VR">
+                                                    <label class="form-check-label" for="VR">Virtual</label><br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*日曆*@
+                                    <div class="d-flex align-items-center" style="font-size: larger; margin-left: 20px;">
+                                        <select id="selbigsmall" class="form-control btn-outline-secondary dropdown-toggle" hidden="hidden">
+                                            <option value="eq">等於</option>
+                                            <option value="gt">大於</option>
+                                            <option value="ge">大於或等於</option>
+                                            <option value="lt">小於</option>
+                                            <option value="le">小於或等於</option>
+                                        </select>
+                                        <input type="datetime-local" class="form-control" id="txtDate" hidden="hidden" />
+                                    </div>
 
-                            @*日曆*@
-                            <select id="selbigsmall" hidden="hidden">
-                                <option value="eq">等於</option>
-                                <option value="gt">大於</option>
-                                <option value="ge">大於或等於</option>
-                                <option value="lt">小於</option>
-                                <option value="le">小於或等於</option>
-                            </select>
-                            <input type="datetime-local" id="txtDate" hidden="hidden" />
+                                    @*新增按鈕*@
+                                    <div class="d-flex align-items-center" style="font-size:larger">
+                                        <input type="button" id="btnPlus" class="btn-glow-dark btn-primary btn" value="新增" />
+                                    </div>
 
-                            <input type="button" id="btnPlus" value="新增" />
+                                </div>
+                                </div>
+
+
                         </form>
                         <p>
-                            <input type="text" id="txtAlltext" size="180" readonly="readonly" />
+                            <input type="text" id="txtAlltext" class="form-control" size="180" readonly="readonly" hidden="hidden" />
                         </p>
+
+                        @*<div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        1 of 2
+                                    </div>
+                                    <div class="col">
+                                        2 of 2
+                                    </div>
+                                </div>
+
+                            </div>*@
+
+
                         <p>
-                            <input type="button" value="送出" id="btnSendmulsearch" size="180" />
+                            <input type="button" value="送出" class="btn-glow-dark btn-dark col-12 btn" id="btnSendmulsearch" size="180" />
                         </p>
+
+
                     </div>
                 </div>
             </div>
@@ -135,6 +198,30 @@
     </div>
 </div>
 <div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><b>已搜尋條件</b></h5>
+                <input type="button" value="清空" class="btn-glow-dark btn-danger col-1 btn" id="btnclean" @*size="180"*@ />
+
+                <p>
+                </p>
+            </div>
+            <div class="card-block">
+                <div class="container">
+                    <div class="row col-12">
+                        <div class="row col-12" style="font-size: medium;" id="searchresult2">
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div class="row">
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header">
@@ -147,9 +234,9 @@
                     </button>
                     <div id="dropdown_item" class="dropdown-menu">
                     </div>
-                </div>
-                @*搜尋*@
-                <form id="search_form">
+                </div>-->
+@*搜尋*@
+<!--<form id="search_form">
                     <div class="row" id="Parameter">
 
                     </div>
@@ -159,7 +246,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
@@ -169,12 +256,22 @@
 
 
             <div class="card-block">
+
                 <div class="table-responsive">
+                    @*<form class="form-inline mt-2 mt-md-0">
+                            <input id="input1" data-table="order-table" class="light-table-filter form-control mr-sm-2" type="Search" placeholder="Search" aria-label="Search">
+                        </form>*@
                     @*<form class="form-inline mt-2 mt-md-0">
                             <input id="input1" data-table="order-table" class="light-table-filter form-control mr-sm-2" type="Search" placeholder="Search" aria-label="Search">
                         </form>*@
                     @*<input type="search" class="form-control" placeholder="Search Dashboard" aria-label="Search Dashboard">
                         <div class="drop-down   d-md-none">
+                            <form action="#">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </form>
+                        </div>*@
+                    @*<input type="search" class="form-control" placeholder="Search Dashboard" aria-label="Search Dashboard">*@
+                    @*<div class="drop-down   d-md-none">
                             <form action="#">
                                 <input type="text" class="form-control" placeholder="Search">
                             </form>
@@ -192,8 +289,8 @@
     <script src="~/Scripts/datatables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/datatables/dataTables.bootstrap4.min.js"></script>
     @*<script src="~/Scripts/FixedHeader/js/dataTables.fixedHeader.min.js"></script>*@
-<script type="text/javascript">
-
+    <script src="~/Scripts/FixedHeader/js/dataTables.fixedHeader.min.js"></script>
+    <script type="text/javascript">
         //// 搜尋
         //$(function () {
         //    'use strict';
@@ -2163,15 +2260,6 @@
             return data;
         }
 
-        function GetUrl2() {
-            var data = {};
-            //data.url = $("#FHIR_url").val();
-            //data.token = $("#FHIR_Token").val();
-            data.entry = "entry";
-            alert(data);
-            return data;
-
-        }
 
         /*new0609*/
         department = new Array();
@@ -2256,6 +2344,11 @@
 
             /*0614起始*/
             var secvalue = $(".slesecvalue").val();
+
+
+
+
+
             if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "bodySite") {
                 //文字
                 var txtwriting = $("#txtWrite").val();
@@ -2283,6 +2376,13 @@
             }
             /*0614結束*/
 
+            var newHtml2 = "";
+
+            newHtml2 += '<div class="">';
+            newHtml2 += resourcevalue + '-' + secvalue + ':' + txtwriting + ',';
+            newHtml2 += '</div>';
+
+            $("#searchresult2").append(newHtml2);
 
 
 
@@ -2333,6 +2433,8 @@
                     else {
                         var lblstart = "Patient?_has:" + abc
                         $("#txtAlltext").val(lblstart);
+                        $('#p1').attr('hidden', true);
+
                     }
 
 
@@ -2341,6 +2443,7 @@
                     var str = new Array(text);
                     //alert("str1111=" + str)
                     //var str = text.split("&_has:");
+                    $('#p1').attr('hidden', true);
 
                     if (str.indexOf(abc) == -1) {
                         // 比對是否有一樣的項目 -1表示不存在
@@ -2379,6 +2482,8 @@
 
         /*new0615起始*/
         $("#btnSendmulsearch").click(function () {
+            $('#p1').removeAttr('hidden');
+
             var sendAlltext = $("#txtAlltext").val();
             //var data2 = GetUrl2();
               $.ajax({
@@ -2392,166 +2497,72 @@
                   success: function (data) {//第一層
                     /*var a=  JSON.stringify(msg)*/
                       //alert(msg);
-                      var test2 = JSON.parse(data);
+                      var searchResult = JSON.parse(data);
+                      //console.log(data);
+                      console.log(searchResult);
 
-                      alert(typeof data);
-                      alert(typeof test2);//現在是物件
-                      //alert("第一層:" + Object.keys(test2));
-                      //alert("第二層" + Object.keys(test2.meta));
-                      //alert("第二層的值" + Object.entries(test2.meta));
+
+                     
+
+
+                      //console.log(data3);
                       ReBuilddatatable();
 
-                      if (test2 != null) {
-                          alert("有值");
+                      if (searchResult != null) {
                           var newHtml = "";
-                          $.each(test2.entry, function (index, entry) {
-                              //alert("1");
-                              alert(entry.resource.resourceType);
-                              alert(entry.resource.id);
-                              alert(entry.resource.text.status);
+                          newHtml += '<tr>';
+                          newHtml += '<td>id</td>';
+                          newHtml += '<td>identifier</td>';
+                          newHtml += '<td>姓名</td>';
+                          newHtml += '<td>性別</td>';
+                          newHtml += '<td>出生年月日</td>';
+                          newHtml += '<td>連結</td>';
 
-                              newHtml += '<li><div class="row"><div class="col-md-5" style="background-color:cornsilk">< div class="map-panel-box-general" > ';
-                              newHtml += '<p>' + entry.resource.resourceType + '</p>';
-                              alert("1.2")
-                              /*                        newHtml += '<p>' + course.Name + '</p>';*/
-                              if (course.User != null) {
-                                  alert("2");
-                                  newHtml += '<p>User Id ' + course.User.Id + '</p>';
-                                  newHtml += '<p>User name ' + course.User.Username + '</p>';
-                              }
-                              else {
-                              //    alert("2.1");
-                              }
-                              newHtml += '</li>';
+                          newHtml += '</tr>';
+                          $.each(searchResult.entry, function (index, entry) {
+                              //console.log(searchResult);
+
+                              //alert("1");
+                              //alert(entry.resource.id);
+                              //alert(entry.resource.identifier[0].value);//因為值藏在[{}]裡，所以要加[0]
+                              ////alert(entry.resource.name[0].family + entry.resource.name[0].given);
+                              //alert(entry.resource.gender);
+                              //alert(entry.resource.birthDate);
+
+
+                              //0622new_start
+                              //$('#cutomerTable').DataTable({
+                              //    data: searchResult,
+                              //    columns: [
+                              //        { data: 'entry.resource.id' },
+                              //        { data: 'entry.resource.identifier[0].value' },
+                              //        { data: 'entry.resource.gender' },
+                              //        { data: 'entry.resource.birthDate' }
+                              //    ]
+                              //});
+                      //0622new_end
+                              newHtml += '<tr>';
+                              newHtml += '<td>' + entry.resource.id + '</td>';
+                              newHtml += '<td>' + entry.resource.identifier[0].value + '</td>';
+                              newHtml += '<td></td>';
+                              newHtml += '<td>' + entry.resource.gender + '</td>';
+                              newHtml += '<td>' + entry.resource.birthDate + '</td>';
+
+                              newHtml += '<td> <a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/Patient/' + entry.resource.id + '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >';
+                              newHtml += '</tr>';
+
                           });
-                          //alert(newHtml);
-                          $("#myCourses").html(newHtml);
+                          $("#cutomerTable").html(newHtml);
+
+                      //    $("#cutomerTable").DataTable(newHtml);
                       } else
                       {
-                          //alert("3");
+                          newHtml += '<tr>';
+                          newHtml += '<td>查無資料</td>';
+                          newHtml += '</tr>';
+
+                          alert("沒有資料");
                       }
-
-
-
-
-                      //alert("第二層的值" + Object.entries(test2.entry));
-
-                      ////alert("第三層" + Object.fromEntries(test2.entry));
-                      ////alert("第三的值" + Object.entries(test2.entry));
-                      //alert(Object.entries(test2));
-
-                      //alert("test2.id=" + whichIsVisible().test2.entry);
-
-                      //alert(test2.entry.identifier);
-                      //if (alert(test2.find(element => element = "entry"))) {
-                      //    alert("有找到");
-                      //} else
-                      //{
-                      //    alert("沒找到");
-                      //}
-
-                      //if (msg.indexOf("entry") != -1) {
-                      //    alert("有找到");
-
-                      //}
-
-
-                      //alert(test2.indexOf('entry'));
-                      //alert("test2.identifier=" + test2.entry[0].identifier);
-                      //alert("test2.gender=" + test2.entry[0].gender);
-                      //alert("test2.birthDate=" + test2.entry[0].birthDate);
-                      //var resource = [
-                      //    {
-                      //        "id": test2.id
-                      //        //,
-                      //        //"identifier": test2.identifier,
-                      //        //"gender": test2.gender,
-                      //        //"birthDate": test2.birthDate
-                      //    }
-                      //];
-
-
-
-
-                      @*//0617測試start
-                $("#cutomerTable").DataTable({
-                searching: false,
-                /*欄位置頂*/
-                fixedHeader: true,
-               proccessing: true,
-                serverSide: true,
-                ajax: {
-                    url: "@Url.Action("Index2", "Home")",
-                    type: "POST",
-                    data: data2,
-                    datatype: "json"
-                },
-                columnDefs: [{
-                    targets: '_all',
-                    defaultContent: ""
-                }],
-                columns: [
-                    { "data": "id", "name": "id", "title": "id"},
-                    { "data": "identifier[, ].value", "name": "identifier", "title": "Identifier"},
-                    { "data": "name[, ].text", "name": "name", "title": "姓名"},
-                    { "data": "gender", "name": "gender", "title": "性別"},
-                    { "data": "birthDate", "name": "birthdate", "title": "生日"},
-                    {
-                        "data": "id",
-                        "name": "id",
-                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                            $(nTd).addClass('text-center');
-                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType+'/'+ oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
-                        }
-                    },
-                ]
-            });
-                      //0617測試end*@
-
-
-
-                      @*var table = $("#cutomerTable").DataTable({
-                          data: data,
-                searching: false,
-                /*欄位置頂*/
-                fixedHeader: true,
-                proccessing: true,
-                serverSide: true,
-                "ajax": {
-                    "url": "@Url.Action("Index2", "Home")",
-                              "type": "POST",
-                              "data": {
-                          sendalltext: sendAlltext
-                      },
-                    "datatype": "json",
-                    success: function (msg) {
-                        /*var a=  JSON.stringify(msg)*/
-                        alert(msg);
-                        alert(typeof msg);
-                        var test2 = JSON.parse(msg);
-                        alert(typeof test2);
-                        alert("test2.id" + test2.id);
-                        alert("test2.identifier" + test2.identifier);
-                        alert("test2.gender" + test2.gender);
-                        alert("test2.birthDate" + test2.birthDate);
-
-                        alert(typeof test2.total);
-
-                        /*0617測試開始*/
-                    }
-                },
-                columnDefs: [{
-                    "targets": '_all',
-                    "defaultContent": ""
-                }],
-                          columns: [
-                              { data: 'id' }
-
-                ]
-            });*@
-
-
-
                 },
                   error: function (data) {
                       alert("no");
@@ -2606,10 +2617,20 @@
                 }
             });*@
 
-
+            $("#txtAlltext").val("");
+            $("#searchresult2").empty();
+            $("#txtWrite").val("");
+            $("#txtDate").val("");
+            //$("#sleResource").val();
 
         })
 
+
+        $("#btnclean").click(function () {
+            $('#p1').removeAttr('hidden');
+            $("#txtAlltext").val("");
+            $("#searchresult2").empty();
+        })
     function OnSuccess(response) {
         ReBuilddatatable();
 
@@ -2635,5 +2656,5 @@
 
 
         /*new0615結束*/
-</script>
+    </script>
 }

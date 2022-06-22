@@ -59,7 +59,7 @@ namespace FHIR_Demo.Controllers
 
             ViewBag.SelectList222 = selectList222;
 
-
+            ViewBag.getjson = "2";
             return View();
 
         }
@@ -90,7 +90,9 @@ namespace FHIR_Demo.Controllers
         {
             //var Getomi_json = "'entry': [{'fullUrl': 'http://10.40.8.45:8080/fhir/Patient/C04DA5FB362ACBE0D8B8E889364A10C9DA0E6E76'} ]";
             var Getomi_json = await Get_MultipleSearch(sendalltext);
+            ViewBag.getjson = Getomi_json;
             return Json(Getomi_json);
+           
         }
 
 
