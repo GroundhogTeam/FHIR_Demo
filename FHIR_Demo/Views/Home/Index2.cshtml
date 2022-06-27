@@ -308,6 +308,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css" rel="stylesheet" />
 
+    @*datatable_file_export*@
+    @*<script src="https://code.jquery.com/jquery-3.5.1.js"></script>*@
+    @*<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>*@
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+
     <script type="text/javascript">
 
         let totalnumber = 0;
@@ -2555,100 +2564,66 @@
                 success: function (data) {//第一層
                     /*var a=  JSON.stringify(msg)*/
                     //alert(msg);
-                    var searchResult = JSON.parse(data);
-                    //console.log(data);
+                    var data = JSON.parse(data);
+                    console.log(data);
                     //console.log(searchResult);
 
                     //console.log(data3);
                     ReBuilddatatable();
-                      var table = $("#cutomerTable").DataTable({
-                          "searching": false,
+                    var newHtml = "";
+
+
+                    var table = $("#cutomerTable").DataTable({
+                        "searching": true,
                           /*欄位置頂*/
                           "fixedHeader": true,
                           "proccessing": true,
-                          "serverSide": true,
-                          "ajax": {
+                          //"serverSide": true,
+                          @*"ajax": {
                               "url": "@Url.Action("Index2", "Home")",
                               "type": "POST",
-                              "data": data.entry,
-                              "datatype": "json"
-                          },
+                          },*@
+                          "data": data.entry,
+                          "datatype": "json",
                           "columnDefs": [{
                               "targets": '_all',
                               "defaultContent": ""
-                          }],
+                        }],
+                        "dom": 'Bfrtip',
+                        "buttons": [
+                            'copy', 'excel', 'print'
+                        ],
                           "columns": [
-                              { "data": "id", "name": "id", "title": "id" }
-                              //,
-                              //{ "data": "identifier[, ].value", "name": "identifier", "title": "Identifier"},
-                              //{ "data": "name[, ].text", "name": "name", "title": "姓名"},
-                              //{ "data": "gender", "name": "gender", "title": "性別"},
-                              //{ "data": "birthDate", "name": "birthdate", "title": "生日"},
-                              //{
-                              //    "data": "id",
-                              //    "name": "id",
-                              //    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                              //        $(nTd).addClass('text-center');
-                              //        $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType+'/'+ oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
-                              //    }
-                              //},
+                              { "data": "resource.id", "name": "id", "title": "id" },
+                              { "data": "resource.identifier[, ].value", "name": "identifier", "title": "Identifier" },
+                              { "data": "resource.name[, ].text", "name": "name", "title": "姓名" },
+                              { "data": "resource.gender", "name": "gender", "title": "性別"},
+                              { "data": "resource.birthDate", "name": "birthdate", "title": "生日"},
+                              {
+                                  "data": "resource.id",
+                                  "name": "id",
+                                  "title": "連結",
+                                  "createdCell": function (td, cellData, rowData, row, col) {
+                                      if (cellData < 1) {
+                                          $(td).css('color', 'red');
+                                      } else
+                                      {
+                                          $(td).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/Patient/' + cellData.id+ '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >');
+                                      }
+                                  }
+                                  //"fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                                  //    //newHtml += '<td> <a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/Patient/' + entry.resource.id + '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >';
+
+
+                                  //    $(nTd).addClass('text-center');
+                                  //    $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/Patient/' + entry.resource.id + '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >');
+                                  //}
+                              },
+
                           ]
 
                       });
-                    //if (searchResult != null) {
-                    //    var newHtml = "";
-                    //    newHtml += '<tr>';
-                    //    newHtml += '<td>id</td>';
-                    //    newHtml += '<td>identifier</td>';
-                    //    newHtml += '<td>姓名</td>';
-                    //    newHtml += '<td>性別</td>';
-                    //    newHtml += '<td>出生年月日</td>';
-                    //    newHtml += '<td>連結</td>';
 
-                    //    newHtml += '</tr>';
-                    //    $.each(searchResult.entry, function (index, entry) {
-                    //        //console.log(searchResult);
-
-                    //        //alert("1");
-                    //        //alert(entry.resource.id);
-                    //        //alert(entry.resource.identifier[0].value);//因為值藏在[{}]裡，所以要加[0]
-                    //        ////alert(entry.resource.name[0].family + entry.resource.name[0].given);
-                    //        //alert(entry.resource.gender);
-                    //        //alert(entry.resource.birthDate);
-
-
-                    //        //0622new_start
-                    //        //$('#cutomerTable').DataTable({
-                    //        //    data: searchResult,
-                    //        //    columns: [
-                    //        //        { data: 'entry.resource.id' },
-                    //        //        { data: 'entry.resource.identifier[0].value' },
-                    //        //        { data: 'entry.resource.gender' },
-                    //        //        { data: 'entry.resource.birthDate' }
-                    //        //    ]
-                    //        //});
-                    //        //0622new_end
-                    //        newHtml += '<tr>';
-                    //        newHtml += '<td>' + entry.resource.id + '</td>';
-                    //        newHtml += '<td>' + entry.resource.identifier[0].value + '</td>';
-                    //        newHtml += '<td></td>';
-                    //        newHtml += '<td>' + entry.resource.gender + '</td>';
-                    //        newHtml += '<td>' + entry.resource.birthDate + '</td>';
-
-                    //        newHtml += '<td> <a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/Patient/' + entry.resource.id + '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >';
-                    //        newHtml += '</tr>';
-
-                    //    });
-                    //    $("#cutomerTable").html(newHtml);
-
-                    //    //    $("#cutomerTable").DataTable(newHtml);
-                    //} else {
-                    //    newHtml += '<tr>';
-                    //    newHtml += '<td>查無資料</td>';
-                    //    newHtml += '</tr>';
-
-                    //    alert("沒有資料");
-                    //}
                 },
                 error: function (data) {
                     alert("no");
