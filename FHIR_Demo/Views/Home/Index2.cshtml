@@ -260,38 +260,38 @@
 
                 <div class="table-responsive">
                     @*<form class="form-inline mt-2 mt-md-0">
-            <input id="input1" data-table="order-table" class="light-table-filter form-control mr-sm-2" type="Search" placeholder="Search" aria-label="Search">
-        </form>*@
+                            <input id="input1" data-table="order-table" class="light-table-filter form-control mr-sm-2" type="Search" placeholder="Search" aria-label="Search">
+                        </form>*@
                     @*<form class="form-inline mt-2 mt-md-0">
-            <input id="input1" data-table="order-table" class="light-table-filter form-control mr-sm-2" type="Search" placeholder="Search" aria-label="Search">
-        </form>*@
+                            <input id="input1" data-table="order-table" class="light-table-filter form-control mr-sm-2" type="Search" placeholder="Search" aria-label="Search">
+                        </form>*@
                     @*<input type="search" class="form-control" placeholder="Search Dashboard" aria-label="Search Dashboard">
-        <div class="drop-down   d-md-none">
-            <form action="#">
-                <input type="text" class="form-control" placeholder="Search">
-            </form>
-        </div>*@
+                        <div class="drop-down   d-md-none">
+                            <form action="#">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </form>
+                        </div>*@
                     @*<input type="search" class="form-control" placeholder="Search Dashboard" aria-label="Search Dashboard">*@
                     @*<div class="drop-down   d-md-none">
-            <form action="#">
-                <input type="text" class="form-control" placeholder="Search">
-            </form>
-        </div>*@
+                            <form action="#">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </form>
+                        </div>*@
                     @*0624_teststart*@
                     @*<div id="wrapper">
-                        <section>
-                            <div class="data-container"></div>
-                            <div id="demo"></div>
-                        </section>
-                    </div>*@
+                            <section>
+                                <div class="data-container"></div>
+                                <div id="demo"></div>
+                            </section>
+                        </div>*@
                     @*0624_testend*@
                     <table id="cutomerTable" class="order-table table-bordered zero-configuration display table table-striped table-hover dataTable text-break" style="width: 100%;" role="grid">
                     </table>
                     <table id="cutomerTable2" class="order-table table-bordered zero-configuration display table table-striped table-hover dataTable text-break" style="width: 100%;" role="grid">
                     </table>
-                    <div id="texttt">
+                    @*<div id="texttt">
                             <button onclick="A(12)">22</button>
-                    </div>
+                        </div>*@
                 </div>
             </div>
         </div>
@@ -313,38 +313,39 @@
         let totalnumber = 0;
         let ab = 10;
 
-        function A(tt)
-        {
-            var nownum = tt * ab; //20 B
-            var nowlastone = nownum - 9; //11 A
-            for (i = nowlastone; i <= nownum; i++)//11~20 show
-            {
-                $('.pag_'+i).removeAttr('hidden');
-            }
+        //function A(tt)
+        //{
+        //    var nownum = tt * ab; //20 B
+        //    var nowlastone = nownum - 9; //11 A
+        //    for (i = nowlastone; i <= nownum; i++)//11~20 show
+        //    {
+        //        $('.pag_'+i).removeAttr('hidden');
+        //    }
 
-            var nowstart = nowlastone - 1; //10 C
-            for (j = 1; j <= nowstart; j++)//1~10 hide
-            {
-                $('.pag_' + j).attr("hidden", true);
-            }
+        //    var nowstart = nowlastone - 1; //10 C
+        //    for (j = 1; j <= nowstart; j++)//1~10 hide
+        //    {
+        //        $('.pag_' + j).attr("hidden", true);
+        //    }
 
-            var nownextone = nownum + 1; //21 D
+        //    var nownextone = nownum + 1; //21 D
 
-            for (k = nownextone; k <= totalnumber; k++)//21~最後 hide
-            {
-                $('.pag_' + k).attr("hidden", true);
-            }
+        //    for (k = nownextone; k <= totalnumber; k++)//21~最後 hide
+        //    {
+        //        $('.pag_' + k).attr("hidden", true);
+        //    }
 
-            //var 
-            //alert(tt + 'JJJ');
-            //if (tt == 1) {
-            //    $(".pag_1").attr("hidden", true);
+        //    //var
+        //    //alert(tt + 'JJJ');
+        //    //if (tt == 1) {
+        //    //    $(".pag_1").attr("hidden", true);
 
-            //} else {
-            //    $('.pag_1').removeAttr('hidden');
-            //}
-           
-        }
+        //    //} else {
+        //    //    $('.pag_1').removeAttr('hidden');
+        //    //}
+
+        //}
+
         //// 搜尋
         //$(function () {
         //    'use strict';
@@ -1321,7 +1322,7 @@
 
 
         SearchParameter(GetUrlToken().resource, null);
-     
+
         $("#dropdown_item").on("click", ".dropdown-item", function () {
             SearchParameter(GetUrlToken().resource, $(this));
         });
@@ -2543,7 +2544,7 @@
             //var data2 = GetUrl2();
 
 
-             @*$.ajax({
+             $.ajax({
                 type: 'POST',
                 url: "@Url.Action("Index2", "Home")",
                 data: {
@@ -2551,10 +2552,10 @@
                 },
                 //type: "POST",
                 dataType: "json",
-                success: function (data2) {//第一層
+                success: function (data) {//第一層
                     /*var a=  JSON.stringify(msg)*/
                     //alert(msg);
-                    var searchResult = JSON.parse(data2);
+                    var searchResult = JSON.parse(data);
                     //console.log(data);
                     //console.log(searchResult);
 
@@ -2566,12 +2567,18 @@
                           "fixedHeader": true,
                           "proccessing": true,
                           "serverSide": true,
+                          "ajax": {
+                              "url": "@Url.Action("Index2", "Home")",
+                              "type": "POST",
+                              "data": data.entry,
+                              "datatype": "json"
+                          },
                           "columnDefs": [{
                               "targets": '_all',
                               "defaultContent": ""
                           }],
                           "columns": [
-                              { "searchResult": "id", "name": "id", "title": "id" }
+                              { "data": "id", "name": "id", "title": "id" }
                               //,
                               //{ "data": "identifier[, ].value", "name": "identifier", "title": "Identifier"},
                               //{ "data": "name[, ].text", "name": "name", "title": "姓名"},
@@ -2652,14 +2659,14 @@
                 complete: function () {
                     $('.loadingdiv').hide();
                 }
-            });*@
+            });
 
 
 
 
 
             /*現在可以用start*/
-              $.ajax({
+              @*$.ajax({
                 type: 'POST',
                 url: "@Url.Action("Index2", "Home")",
                   data: {
@@ -2685,17 +2692,17 @@
                       ReBuilddatatable();
                       //string url = ;
 
-                    
+
                       var getUrlString = location.href;
                       var NewString_con = getUrlString.split(",");
-                      
+
 
                       if (searchResult != null) {
                           var newHtml = "";
 
                           var panginationdiv = "";
 
-                     
+
 
 
                           newHtml += '<tr>';
@@ -2712,7 +2719,7 @@
                           let num2 = 0;
                           alert(getUrlString);
                           $.each(searchResult.entry, function (index, entry) {
-                              
+
 
                               num += 1;
                               //console.log(searchResult);
@@ -2736,7 +2743,7 @@
                               //    ]
                               //});
                               //0622new_end
-                              
+
 
                               newHtml += '<tr class =pag_' + num + '>';
 
@@ -2749,9 +2756,9 @@
                               newHtml += '<td> <a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/Patient/' + entry.resource.id + '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >';
                               newHtml += '</tr>';
 
-                              
+
                               if (num % 10 == 0) {
-                                  
+
                                   //alert(num + "是10的倍数");
                                   num2 += 1;
                                   alert(num2);
@@ -2762,7 +2769,7 @@
                               };
                               $("#texttt").html(panginationdiv);
                           });
-                          
+
                           $("#cutomerTable2").html(newHtml);
                           for (M = 11; M <= totalnumber; M++)//11~最後 hide
                           {
@@ -2850,7 +2857,7 @@
                       }
 
 
-                    
+
                 },
                   error: function (data) {
                       alert("no");
@@ -2861,7 +2868,7 @@
                 complete: function () {
                     $('.loadingdiv').hide();
                 }
-            });
+            });*@
             /*現在可以用end*/
             @*$.ajax({
                 type: 'POST',
