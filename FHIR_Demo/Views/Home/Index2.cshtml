@@ -1626,7 +1626,7 @@
                 "ajax": {
                     "url": "@Url.Action("GetResource", "Home")",
                     "type": "POST",
-                    "data": data,
+                    "data": data.entry,
                     "datatype": "json"
                 },
                 "columnDefs": [{
@@ -1644,7 +1644,7 @@
                         "name": "id",
                         "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                             $(nTd).addClass('text-center');
-                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="'+baseSiteURL+'Resource/' + oData.resourceType+'/'+ oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+                            $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="' + baseSiteURL + 'Resource/' + oData.resourceType + '/' + oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
                         }
                     },
                 ]
@@ -2354,9 +2354,17 @@
         $("#sleResource").click(function () {
             $("#s1").attr("disabled", "true");
             $("#sleResource option:selected").val();
+            var a = $("#sleResource option:selected").val();
+            if (a == "Patient")
+            {
+                $('#txtWrite').removeAttr('hidden');
+
+            };
+
         })
         //起始的
         $(".slesecvalue").change(function () {
+
             var secvalue = $(".slesecvalue").val();
             $('#txtWrite').val("");
             $('#txtDate').val("");
@@ -2603,16 +2611,17 @@
                                   "data": "resource.id",
                                   "name": "id",
                                   "title": "連結",
-                                  "createdCell": function (td, cellData, rowData, row, col) {
-                                      if (cellData < 1) {
+                                  "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                                      if (nTd < 1) {
                                           $(td).css('color', 'red');
                                       } else
                                       {
-                                          $(td).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/Patient/' + cellData.id+ '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >');
+                                          $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/' + oData.resource.resourceType + '/' + oData.resource.id + '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >');
                                       }
                                   }
                                   //"fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                                   //    //newHtml += '<td> <a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/Patient/' + entry.resource.id + '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >';
+                                                                //"createdCell": function (td, cellData, rowData, row, col) {
 
 
                                   //    $(nTd).addClass('text-center');
