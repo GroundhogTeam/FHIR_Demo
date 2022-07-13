@@ -2616,7 +2616,9 @@
                                           $(td).css('color', 'red');
                                       } else
                                       {
-                                          $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/' + oData.resource.resourceType + '/' + oData.resource.id+ '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >');
+                                          $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href = "' + baseSiteURL + 'Resource/' + oData.resource.resourceType + '/' + oData.resource.id+ '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >');
+                                          //$(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="' + baseSiteURL + 'Resource/' + oData.resourceType + '/' + oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+
                                       }
                                   }
                                   //"fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
