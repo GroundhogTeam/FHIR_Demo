@@ -25,41 +25,41 @@ namespace FHIR_Demo.Controllers
 
         public ActionResult Index2()
         {
-            var selectList = new List<SelectListItem>()
-            {
-                new SelectListItem {Text="Patient", Value="value-1" },
-                new SelectListItem {Text="Encounter", Value="value-2" },
-                new SelectListItem {Text="Observation", Value="value-3" },
-                new SelectListItem {Text="Procedure", Value="value-3" },
-                new SelectListItem {Text="Condition", Value="value-3" },
-                new SelectListItem {Text="MedicationRequest", Value="value-3" },
-                new SelectListItem {Text="DiagnosticReport", Value="value-3" },                
-                new SelectListItem {Text="ServiceRequest", Value="value-3" },
-            };
+            //var selectList = new List<SelectListItem>()
+            //{
+            //    new SelectListItem {Text="Patient", Value="value-1" },
+            //    new SelectListItem {Text="Encounter", Value="value-2" },
+            //    new SelectListItem {Text="Observation", Value="value-3" },
+            //    new SelectListItem {Text="Procedure", Value="value-3" },
+            //    new SelectListItem {Text="Condition", Value="value-3" },
+            //    new SelectListItem {Text="MedicationRequest", Value="value-3" },
+            //    new SelectListItem {Text="DiagnosticReport", Value="value-3" },                
+            //    new SelectListItem {Text="ServiceRequest", Value="value-3" },
+            //};
 
-            //預設選擇哪一筆
-            selectList.Where(q => q.Value == "value-2").First().Selected = true;
+            ////預設選擇哪一筆
+            //selectList.Where(q => q.Value == "value-2").First().Selected = true;
 
-            ViewBag.SelectList = selectList;
+            //ViewBag.SelectList = selectList;
 
-            var selectList222 = new List<SelectListItem>()
-            {
-                new SelectListItem {Text="Patient", Value="value-1" },
-                new SelectListItem {Text="Encounter", Value="value-2" },
-                new SelectListItem {Text="Observation", Value="value-3" },
-                new SelectListItem {Text="Procedure", Value="value-3" },
-                new SelectListItem {Text="Condition", Value="value-3" },
-                new SelectListItem {Text="MedicationRequest", Value="value-3" },
-                new SelectListItem {Text="DiagnosticReport", Value="value-3" },
-                new SelectListItem {Text="ServiceRequest", Value="value-3" },
-            };
+            //var selectList222 = new List<SelectListItem>()
+            //{
+            //    new SelectListItem {Text="Patient", Value="value-1" },
+            //    new SelectListItem {Text="Encounter", Value="value-2" },
+            //    new SelectListItem {Text="Observation", Value="value-3" },
+            //    new SelectListItem {Text="Procedure", Value="value-3" },
+            //    new SelectListItem {Text="Condition", Value="value-3" },
+            //    new SelectListItem {Text="MedicationRequest", Value="value-3" },
+            //    new SelectListItem {Text="DiagnosticReport", Value="value-3" },
+            //    new SelectListItem {Text="ServiceRequest", Value="value-3" },
+            //};
 
-            //預設選擇哪一筆
-            selectList222.Where(q => q.Value == "value-2").First().Selected = true;
+            ////預設選擇哪一筆
+            //selectList222.Where(q => q.Value == "value-2").First().Selected = true;
 
-            ViewBag.SelectList222 = selectList222;
+            //ViewBag.SelectList222 = selectList222;
 
-            ViewBag.getjson = "2";
+            //ViewBag.getjson = "2";
             return View();
 
         }

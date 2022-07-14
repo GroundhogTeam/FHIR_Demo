@@ -108,6 +108,10 @@
                                                     <input class="form-check-input" type="radio" id="female" name="gender" value="female">
                                                     <label class="form-check-label" for="female">Female</label><br>
                                                 </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" id="unknown" name="gender" value="unknown">
+                                                    <label class="form-check-label" for="unknown">Unknown</label><br>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -158,6 +162,18 @@
                                             <option value="le">小於或等於</option>
                                         </select>
                                         <input type="datetime-local" class="form-control" id="txtDate" hidden="hidden" />
+                                    </div>
+
+                                    @*valuequantity*@
+                                    <div class="d-flex align-items-center" style="font-size: larger; margin-left: 20px;">
+                                        <select id="selValueQuantity" class="form-control btn-outline-secondary dropdown-toggle" hidden="hidden">
+                                            <option value="eq">等於</option>
+                                            <option value="gt">大於</option>
+                                            <option value="ge">大於或等於</option>
+                                            <option value="lt">小於</option>
+                                            <option value="le">小於或等於</option>
+                                        </select>
+                                        <input type="text" class="form-control" id="txtValueQ" hidden="hidden" />
                                     </div>
 
                                     @*新增按鈕*@
@@ -2333,7 +2349,7 @@
         department[3] = ["identifier", "name", "gender"];// practitioner
         department[4] = ["identifier", "authored", "occurrence"];// servicerequest
         department[5] = ["identifier", "code", "result","date"];// diagnosticreport
-        department[6] = ["identifier", "code", "date"];// observation
+        department[6] = ["identifier", "code", "date","value-quantity"];// observation
         department[7] = ["identifier", "code", "bodySite"];// procedure
         department[8] = ["identifier", "code", "bodySite"];// condition
         department[9] = ["identifier", "authored"];// medicationrequest
@@ -2354,10 +2370,24 @@
         $("#sleResource").click(function () {
             $("#s1").attr("disabled", "true");
             $("#sleResource option:selected").val();
-            var a = $("#sleResource option:selected").val();
-            if (a == "Patient")
+            var resouceval = $("#sleResource option:selected").val();
+            var secvalue = $(".slesecvalue").val();
+
+            if (secvalue =="identifier"&&(resouceval == "Patient" || resouceval == "Encounter" || resouceval == "Practitioner" || resouceval == "ServiceRequest" || resouceval == "DiagnosticReport" || resouceval == "Observation" || resouceval == "Procedure" || resouceval == "Condition" || resouceval == "MedicationRequest"))
             {
+                //$('#txtWrite').removeAttr('hidden');
+                //$('#selValueQuantity').attr('hidden', true);
+                //$('#selbigsmall').attr('hidden', true);
+                //$('#txtValueQ').attr('hidden', true);
+                //$('#txtDate').attr('hidden', true);
+
                 $('#txtWrite').removeAttr('hidden');
+                $('#txtDate').attr('hidden', true);
+                $('#txtValueQ').attr('hidden', true);
+                $('#rdbGender').attr('hidden', true);
+                $('#rdbClass').attr('hidden', true);
+                $('#selbigsmall').attr('hidden', true);
+                $('#selValueQuantity').attr('hidden', true);
 
             };
 
@@ -2368,13 +2398,18 @@
             var secvalue = $(".slesecvalue").val();
             $('#txtWrite').val("");
             $('#txtDate').val("");
+            $('#txtValueQ').val("");
+
             if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "bodySite") {
                 //alert("文字");
                 $('#txtWrite').removeAttr('hidden');
                 $('#txtDate').attr('hidden', true);
+                $('#txtValueQ').attr('hidden', true);
                 $('#rdbGender').attr('hidden', true);
                 $('#rdbClass').attr('hidden', true);
                 $('#selbigsmall').attr('hidden', true);
+                $('#selValueQuantity').attr('hidden', true);
+
 
             }
             else if (secvalue == "gender") {
@@ -2382,26 +2417,50 @@
                 $('#rdbClass').attr('hidden', true);
                 $('#rdbGender').removeAttr('hidden');
                 $('#txtDate').attr('hidden', true);
+                $('#txtValueQ').attr('hidden', true);
+
                 $('#txtWrite').attr('hidden', true);
                 $('#selbigsmall').attr('hidden', true);
+                $('#selValueQuantity').attr('hidden', true);
 
-/*                var abc = $('input[name="gender"]:checked').val();*/
+
+                /*                var abc = $('input[name="gender"]:checked').val();*/
             }
             else if (secvalue == "class") {
                 $('#rdbClass').removeAttr('hidden');
                 $('#rdbGender').attr('hidden', true);
                 $('#txtDate').attr('hidden', true);
+                $('#txtValueQ').attr('hidden', true);
+
                 $('#txtWrite').attr('hidden', true);
                 $('#selbigsmall').attr('hidden', true);
+                $('#selValueQuantity').attr('hidden', true);
+
             }
-            else if (secvalue == "authored" || secvalue == "occurrence" || secvalue == "date" || secvalue =="birthdate")
-            {
+            else if (secvalue == "authored" || secvalue == "occurrence" || secvalue == "date" || secvalue == "birthdate") {
                 //alert("日期");
                 $('#txtDate').removeAttr('hidden');
+                //$('#txtValueQ').removeAttr('hidden');
+                $('#txtValueQ').attr('hidden', true);
+
                 $('#selbigsmall').removeAttr('hidden');
+                $('#selValueQuantity').attr('hidden', true);
+
                 $('#rdbGender').attr('hidden', true);
                 $('#rdbClass').attr('hidden', true);
                 $('#txtWrite').attr('hidden', true);
+            }
+            else if (secvalue == "value-quantity")
+            {
+                $('#txtDate').attr('hidden', true);
+                $('#txtValueQ').removeAttr('hidden');
+                $('#selbigsmall').attr('hidden', true);
+                $('#selValueQuantity').removeAttr('hidden');
+
+                $('#rdbGender').attr('hidden', true);
+                $('#rdbClass').attr('hidden', true);
+                $('#txtWrite').attr('hidden', true);
+
             }
             var resource_secvalue = $(".slesecvalue").val();
         });
@@ -2442,11 +2501,16 @@
             else if (secvalue == "authored" || secvalue == "occurrence" || secvalue == "date" || secvalue == "birthdate") {
                 //日曆
                 var equdate = $("#selbigsmall option:selected").val();
-                var txtwriting = equdate+$("#txtDate").val();
+                var txtwriting = equdate + $("#txtDate").val();
                 /*var txtdel = "-T";*/
                 //alert(txtwriting);
 
 
+            }
+            else if (secvalue == "value-quantity")
+            {
+                var equdate = $("#selValueQuantity option:selected").val();
+                var txtwriting = equdate + $("#txtValueQ").val();
             }
             /*0614結束*/
 
@@ -2557,9 +2621,9 @@
         /*new0615起始*/
         $("#btnSendmulsearch").click(function () {
             $('#p1').removeAttr('hidden');
-            var sendAlltext = $("#txtAlltext").val();
+            var sendAlltext = $("#txtAlltext").val() +"&_total=accurate";
             //var data2 = GetUrl2();
-
+            alert("現在傳送的是" + sendAlltext);
 
              $.ajax({
                 type: 'POST',
@@ -2902,6 +2966,8 @@
             $("#searchresult2").empty();
             $("#txtWrite").val("");
             $("#txtDate").val("");
+            $("#txtValueQ").val("");
+
             //$("#sleResource").val();
 
         })
