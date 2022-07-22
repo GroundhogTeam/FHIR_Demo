@@ -2413,12 +2413,16 @@
             $('#txtWrite').val("");
             $('#txtDate').val("");
             $('#txtValueQ').val("");
+            $('#txtComVQ').val();
+
 
             if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "bodySite") {
                 //alert("文字");
                 $('#txtWrite').removeAttr('hidden');
                 $('#txtDate').attr('hidden', true);
                 $('#txtValueQ').attr('hidden', true);
+                $('#txtComVQ').attr('hidden', true);
+
                 $('#rdbGender').attr('hidden', true);
                 $('#rdbClass').attr('hidden', true);
                 $('#selbigsmall').attr('hidden', true);
@@ -2433,6 +2437,7 @@
                 $('#rdbGender').removeAttr('hidden');
                 $('#txtDate').attr('hidden', true);
                 $('#txtValueQ').attr('hidden', true);
+                $('#txtComVQ').attr('hidden', true);
 
                 $('#txtWrite').attr('hidden', true);
                 $('#selbigsmall').attr('hidden', true);
@@ -2447,6 +2452,7 @@
                 $('#rdbGender').attr('hidden', true);
                 $('#txtDate').attr('hidden', true);
                 $('#txtValueQ').attr('hidden', true);
+                $('#txtComVQ').attr('hidden', true);
 
                 $('#txtWrite').attr('hidden', true);
                 $('#selbigsmall').attr('hidden', true);
@@ -2459,6 +2465,7 @@
                 $('#txtDate').removeAttr('hidden');
                 //$('#txtValueQ').removeAttr('hidden');
                 $('#txtValueQ').attr('hidden', true);
+                $('#txtComVQ').attr('hidden', true);
 
                 $('#selbigsmall').removeAttr('hidden');
                 $('#selValueQuantity').attr('hidden', true);
