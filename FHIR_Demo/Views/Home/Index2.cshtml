@@ -176,6 +176,19 @@
                                         <input type="text" class="form-control" id="txtValueQ" hidden="hidden" />
                                     </div>
 
+                                    @*component-value-quantity*@
+                                    <div class="d-flex align-items-center" style="font-size: larger; margin-left: 20px;">
+                                        <select id="selComVQ" class="form-control btn-outline-secondary dropdown-toggle" hidden="hidden">
+                                            <option value="eq">等於</option>
+                                            <option value="gt">大於</option>
+                                            <option value="ge">大於或等於</option>
+                                            <option value="lt">小於</option>
+                                            <option value="le">小於或等於</option>
+                                        </select>
+                                        <input type="text" class="form-control" id="txtComVQ" hidden="hidden" />
+                                    </div>
+
+
                                     @*新增按鈕*@
                                     <div class="d-flex align-items-center" style="font-size:larger">
                                         <input type="button" id="btnPlus" class="btn-glow-dark btn-primary btn" value="新增" />
@@ -2349,7 +2362,7 @@
         department[3] = ["identifier", "name", "gender"];// practitioner
         department[4] = ["identifier", "authored", "occurrence"];// servicerequest
         department[5] = ["identifier", "code", "result","date"];// diagnosticreport
-        department[6] = ["identifier", "code", "date","value-quantity"];// observation
+        department[6] = ["identifier", "code", "date", "value-quantity","component-value-quantity"];// observation
         department[7] = ["identifier", "code", "bodySite"];// procedure
         department[8] = ["identifier", "code", "bodySite"];// condition
         department[9] = ["identifier", "authored"];// medicationrequest
@@ -2388,6 +2401,7 @@
                 $('#rdbClass').attr('hidden', true);
                 $('#selbigsmall').attr('hidden', true);
                 $('#selValueQuantity').attr('hidden', true);
+                $('#selComVQ').attr('hidden', true);
 
             };
 
@@ -2399,16 +2413,21 @@
             $('#txtWrite').val("");
             $('#txtDate').val("");
             $('#txtValueQ').val("");
+            $('#txtComVQ').val();
+
 
             if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "bodySite") {
                 //alert("文字");
                 $('#txtWrite').removeAttr('hidden');
                 $('#txtDate').attr('hidden', true);
                 $('#txtValueQ').attr('hidden', true);
+                $('#txtComVQ').attr('hidden', true);
+
                 $('#rdbGender').attr('hidden', true);
                 $('#rdbClass').attr('hidden', true);
                 $('#selbigsmall').attr('hidden', true);
                 $('#selValueQuantity').attr('hidden', true);
+                $('#selComVQ').attr('hidden', true);
 
 
             }
@@ -2418,10 +2437,12 @@
                 $('#rdbGender').removeAttr('hidden');
                 $('#txtDate').attr('hidden', true);
                 $('#txtValueQ').attr('hidden', true);
+                $('#txtComVQ').attr('hidden', true);
 
                 $('#txtWrite').attr('hidden', true);
                 $('#selbigsmall').attr('hidden', true);
                 $('#selValueQuantity').attr('hidden', true);
+                $('#selComVQ').attr('hidden', true);
 
 
                 /*                var abc = $('input[name="gender"]:checked').val();*/
@@ -2431,10 +2452,12 @@
                 $('#rdbGender').attr('hidden', true);
                 $('#txtDate').attr('hidden', true);
                 $('#txtValueQ').attr('hidden', true);
+                $('#txtComVQ').attr('hidden', true);
 
                 $('#txtWrite').attr('hidden', true);
                 $('#selbigsmall').attr('hidden', true);
                 $('#selValueQuantity').attr('hidden', true);
+                $('#selComVQ').attr('hidden', true);
 
             }
             else if (secvalue == "authored" || secvalue == "occurrence" || secvalue == "date" || secvalue == "birthdate") {
@@ -2442,20 +2465,39 @@
                 $('#txtDate').removeAttr('hidden');
                 //$('#txtValueQ').removeAttr('hidden');
                 $('#txtValueQ').attr('hidden', true);
+                $('#txtComVQ').attr('hidden', true);
 
                 $('#selbigsmall').removeAttr('hidden');
                 $('#selValueQuantity').attr('hidden', true);
+                $('#selComVQ').attr('hidden', true);
 
                 $('#rdbGender').attr('hidden', true);
                 $('#rdbClass').attr('hidden', true);
                 $('#txtWrite').attr('hidden', true);
             }
-            else if (secvalue == "value-quantity")
-            {
+            else if (secvalue == "value-quantity") {
                 $('#txtDate').attr('hidden', true);
                 $('#txtValueQ').removeAttr('hidden');
+                $('#txtComVQ').attr('hidden', true);
+
                 $('#selbigsmall').attr('hidden', true);
                 $('#selValueQuantity').removeAttr('hidden');
+                $('#selComVQ').attr('hidden', true);
+
+                $('#rdbGender').attr('hidden', true);
+                $('#rdbClass').attr('hidden', true);
+                $('#txtWrite').attr('hidden', true);
+
+            }
+            else if (secvalue == "component-value-quantity")
+            {
+                $('#txtDate').attr('hidden', true);
+                $('#txtValueQ').attr('hidden', true);
+                $('#txtComVQ').removeAttr('hidden');
+
+                $('#selbigsmall').attr('hidden', true);
+                $('#selValueQuantity').attr('hidden', true);
+                $('#selComVQ').removeAttr('hidden');
 
                 $('#rdbGender').attr('hidden', true);
                 $('#rdbClass').attr('hidden', true);
@@ -2507,10 +2549,14 @@
 
 
             }
-            else if (secvalue == "value-quantity")
-            {
+            else if (secvalue == "value-quantity") {
                 var equdate = $("#selValueQuantity option:selected").val();
                 var txtwriting = equdate + $("#txtValueQ").val();
+            }
+            else if (secvalue == "component-value-quantity")
+            {
+                var equdate = $("#selComVQ option:selected").val();
+                var txtwriting = equdate + $("#txtComVQ").val();
             }
             /*0614結束*/
 
