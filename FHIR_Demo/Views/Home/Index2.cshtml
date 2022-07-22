@@ -2637,6 +2637,33 @@
                     /*var a=  JSON.stringify(msg)*/
                     //alert(msg);
                     var data = JSON.parse(data);
+
+                    var datatotal = data.total;//資料總數
+
+                    //擷取頁數
+                    var datac = data.link;
+                    var datac_c = datac[1].url;
+                    var datapageid = datac_c.indexOf("getpages=") + 9;
+                    var datapageid1 = datac_c.indexOf("&_getpagesoffset=");
+                    var datapageid2 = datac_c.indexOf("&_getpagesoffset=") + 17;
+                    var datapageid3 = datac_c.indexOf("&_count");
+                    var getpages = datac_c.substring(datapageid, datapageid1);
+                    var getpagesoffset = datac_c.substring(datapageid2, datapageid3);
+
+                    //新的頁面網址
+                    var newurlpage = "https://hapi.fhir.org/baseR4?_getpages=" + getpages +"&_getpagesoffset="+ getpagesoffset+"&_count=20&_pretty=true&_bundletype=searchset";
+                    
+                    console.log("12345----------");
+                    console.log(datac_c);
+                    console.log(datapageid);
+                    console.log(datapageid1);
+                    console.log("//////getpages////getpagesoffset");
+                    console.log(getpages);
+                    console.log(getpagesoffset);
+                    console.log("//////newurlpage////datatotal");
+                    console.log(newurlpage);
+                    console.log(datatotal);
+                    //alert("54565464454556");
                     console.log(data);
                     //console.log(searchResult);
 
