@@ -188,6 +188,7 @@
                                         <input type="text" class="form-control" id="txtComVQ" hidden="hidden" />
                                     </div>
 
+                                    <input type="text" id="txtBundleID" hidden="hidden" />
 
                                     @*新增按鈕*@
                                     <div class="d-flex align-items-center" style="font-size:larger">
@@ -314,10 +315,25 @@
                             </section>
                         </div>*@
                     @*0624_testend*@
+
+
+
                     <table id="cutomerTable" class="order-table table-bordered zero-configuration display table table-striped table-hover dataTable text-break" style="width: 100%;" role="grid">
                     </table>
                     <table id="cutomerTable2" class="order-table table-bordered zero-configuration display table table-striped table-hover dataTable text-break" style="width: 100%;" role="grid">
                     </table>
+                    <div class="form-group">
+                        <div class="d-flex align-items-center row" style="font-size: larger; margin-left: 20px;">
+                            <select id="selpagi" class="form-control btn-outline-secondary dropdown-toggle col-md-2">
+                                @*<option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>*@
+                            </select>
+                        </div>
+                    </div>
+
                     @*<div id="texttt">
                             <button onclick="A(12)">22</button>
                         </div>*@
@@ -350,6 +366,8 @@
 
         let totalnumber = 0;
         let ab = 10;
+
+
 
         //function A(tt)
         //{
@@ -2682,9 +2700,57 @@
                 success: function (data) {//第一層
                     /*var a=  JSON.stringify(msg)*/
                     //alert(msg);
+
+                    alert("data="+data);
+
                     var data = JSON.parse(data);
 
-                    var datatotal = data.total;//資料總數
+                    var datatotal = data.total;//*****************資料總數
+                    //var datapagi = datatotal / 20;
+                    var datapagi = Math.floor(datatotal / 20);
+
+                    //alert(datapagi)
+                    if (datatotal % 20 != 0) {
+                        //有餘數
+                        datapagi += 1;
+                        //alert("有餘數");
+                        //alert(datapagi);
+                    }
+
+                    for (var i =1; i <= datapagi; i++)
+                    {
+                        $("#selpagi").append($('<option>', {
+                            value: i,
+                            text: i,
+                        }));
+                    }
+                    //$.each(items, function (i, item) {
+                    //    $('#mySelect').append($('<option>', {
+                    //        value: item.value,
+                    //        text: item.text
+                    //    }));
+                    //});
+                    //var select = $("#selpagi");
+                    //$(datapagi).each(function (datapagi) {
+                    //    alert(datapagi);
+                    //    select.append($('<option>', {
+                    //        value: datapagi.Value,
+                    //        text: datapagi.Value,
+                    //    }));
+                    //});
+
+                    //$.each(datatotal, function (i, datapagi) {
+                    //    //alert("2");
+                    //    select.append($('<option>', {
+                    //        value: datapagi.Value,
+                    //        text: datapagi.Value,
+                    //    }));
+                    //    //$("#selpagi").find("option:selected").attr("selected", true);
+
+                    //    //var s = $("#selpagi").find("option:selected").val();
+                    //    //alert(s);
+                    //    //div_card.find('input[name=Total_weight]').val(s)
+                    //});
 
                     //擷取頁數
                     var datac = data.link;
@@ -2696,9 +2762,12 @@
                     var getpages = datac_c.substring(datapageid, datapageid1);
                     var getpagesoffset = datac_c.substring(datapageid2, datapageid3);
 
-                    //新的頁面網址
+                    //***************新的頁面網址
                     var newurlpage = "https://hapi.fhir.org/baseR4?_getpages=" + getpages +"&_getpagesoffset="+ getpagesoffset+"&_count=20&_pretty=true&_bundletype=searchset";
-                    
+
+                    $("#txtBundleID").val(getpages);
+
+
                     console.log("12345----------");
                     console.log(datac_c);
                     console.log(datapageid);
@@ -2722,7 +2791,9 @@
                         "searching": true,
                           /*欄位置頂*/
                           "fixedHeader": true,
-                          "proccessing": true,
+                        "proccessing": true,
+                        "paging": false,
+
                           //"serverSide": true,
                           @*"ajax": {
                               "url": "@Url.Action("Index2", "Home")",
@@ -3054,7 +3125,6 @@
     function OnSuccess(response) {
         ReBuilddatatable();
 
-
 //        $("#cutomerTable").DataTable(
 //            {
 //                bLengthChange: true,
@@ -3073,8 +3143,146 @@
 //                ]
 //            });
     };
-
-
         /*new0615結束*/
+
+
+        /*0722_new_start*/
+        $("#selpagi").change(function () {
+            var pagi = $("#selpagi option:selected").val();
+            var pagi2 = (pagi - 1) * 20;
+
+            alert(pagi);
+            alert("現在資料比數"+pagi2);
+            var getpages = $('#txtBundleID').val();
+            var getpagesoffset = pagi2;
+
+            //alert(getpages);
+            var newurlpage = "https://hapi.fhir.org/baseR4?_getpages=" + getpages + "&_getpagesoffset=" + getpagesoffset + "&_count=20&_pretty=true&_bundletype=searchset";
+
+             $.ajax({
+                type: 'POST',
+                url: "@Url.Action("Index2_2", "Home")",
+                data: {
+                    sendalltext: newurlpage
+                },
+                //type: "POST",
+                dataType: "json",
+                 success: function (data) {//第一層
+                     alert(data);
+                     alert("ok");
+                    /*var a=  JSON.stringify(msg)*/
+                    //alert(msg);
+                    var data = JSON.parse(data);
+                     var select = $("#selpagi");
+
+                     var datatotal = data.total;//*****************資料總數
+                     //var datapagi = datatotal / 20 + 1;
+
+                     //$.each(datapagi, function (i, item) {
+                     //    //alert("2");
+                     //    select.append($('<option>', {
+                     //        value: item.Value,
+                     //        text: item.Value,
+                     //    }));
+                     //    $("#selpagi").find("option:selected").attr("selected", true);
+
+                     //    var s = $("#selpagi").find("option:selected").val();
+                     //    alert(s);
+                     //    div_card.find('input[name=Total_weight]').val(s)
+                     //});
+
+
+
+                    //擷取頁數
+                    var datac = data.link;
+                    var datac_c = datac[1].url;
+                    var datapageid = datac_c.indexOf("getpages=") + 9;
+                    var datapageid1 = datac_c.indexOf("&_getpagesoffset=");
+                    var datapageid2 = datac_c.indexOf("&_getpagesoffset=") + 17;
+                    var datapageid3 = datac_c.indexOf("&_count");
+                    var getpages = datac_c.substring(datapageid, datapageid1);
+                    var getpagesoffset = datac_c.substring(datapageid2, datapageid3);
+
+                    //***************新的頁面網址
+                    var newurlpage = "https://hapi.fhir.org/baseR4?_getpages=" + getpages +"&_getpagesoffset="+ getpagesoffset+"&_count=20&_pretty=true&_bundletype=searchset";
+
+                    $("#txtBundleID").val(getpages);
+
+
+                    console.log("12345----------");
+                    console.log(datac_c);
+                    console.log(datapageid);
+                    console.log(datapageid1);
+                    console.log("//////getpages////getpagesoffset");
+                    console.log(getpages);
+                    console.log(getpagesoffset);
+                    console.log("//////newurlpage////datatotal");
+                    console.log(newurlpage);
+                    console.log(datatotal);
+                    //alert("54565464454556");
+                    console.log(data);
+                    //console.log(searchResult);
+
+                    //console.log(data3);
+                    ReBuilddatatable();
+                    var newHtml = "";
+
+
+                    var table = $("#cutomerTable").DataTable({
+                        "searching": true,
+                          "fixedHeader": true,
+                        "proccessing": true,
+                        "paging": false,
+                          "data": data.entry,
+                          "datatype": "json",
+                          "columnDefs": [{
+                              "targets": '_all',
+                              "defaultContent": ""
+                        }],
+                        "dom": 'Bfrtip',
+                        "buttons": [
+                            'copy', 'excel', 'print'
+                        ],
+                          "columns": [
+                              { "data": "resource.id", "name": "id", "title": "id" },
+                              { "data": "resource.identifier[, ].value", "name": "identifier", "title": "Identifier" },
+                              { "data": "resource.name[, ].text", "name": "name", "title": "姓名" },
+                              { "data": "resource.gender", "name": "gender", "title": "性別"},
+                              { "data": "resource.birthDate", "name": "birthdate", "title": "生日"},
+                              {
+                                  "data": "resource.id",
+                                  "name": "id",
+                                  "title": "連結",
+                                  "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                                      if (nTd < 1) {
+                                          $(td).css('color', 'red');
+                                      } else
+                                      {
+                                          $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href = "' + baseSiteURL + 'Resource/' + oData.resource.resourceType + '/' + oData.resource.id+ '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >');
+
+                                      }
+                                  }
+
+                              },
+
+                          ]
+
+                      });
+
+                },
+                error: function (data) {
+                    alert("no");
+                },
+                beforeSend: function () {
+                    $('.loadingdiv').show();
+                },
+                complete: function () {
+                    $('.loadingdiv').hide();
+                }
+            });
+
+        });
+        /*0722_new_end*/
+
     </script>
 }
