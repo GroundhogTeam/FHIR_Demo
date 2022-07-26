@@ -201,9 +201,11 @@
 
                         </form>
                         <p>
-                            <input type="text" id="txtAlltext" class="form-control" size="180" readonly="readonly" hidden="hidden" />
+                            <input hidden="hidden" type="text" id="txtAlltext" class="form-control" size="180" readonly="readonly" />
                         </p>
-
+                        <p>
+                            <input hidden="hidden" type="text" id="txtAlltext2" class="form-control" size="180" readonly="readonly" />
+                        </p>
                         @*<div class="container">
                                 <div class="row">
                                     <div class="col">
@@ -323,8 +325,8 @@
                     <table id="cutomerTable2" class="order-table table-bordered zero-configuration display table table-striped table-hover dataTable text-break" style="width: 100%;" role="grid">
                     </table>
                     <div class="form-group">
-                        <div class="d-flex align-items-center row" style="font-size: larger; margin-left: 20px;">
-                            <select id="selpagi" class="form-control btn-outline-secondary dropdown-toggle col-md-2">
+                        <div class="d-flex justify-content-end" style="font-size: larger; margin-left: 20px;">
+                            <select id="selpagi" class="form-control btn-outline-secondary dropdown-toggle col-md-2" hidden="hidden" >
                                 @*<option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -1670,6 +1672,7 @@
                 "fixedHeader": true,
                 "proccessing": true,
                 "serverSide": true,
+                "paging": false,
                 "ajax": {
                     "url": "@Url.Action("GetResource", "Home")",
                     "type": "POST",
@@ -2682,12 +2685,24 @@
         /*new0609*/
 
 
-        /*new0615起始*/
+        //舊的_起始
         $("#btnSendmulsearch").click(function () {
             $('#p1').removeAttr('hidden');
-            var sendAlltext = $("#txtAlltext").val() +"&_total=accurate&_sort";
+            //var sendAlltext = $("#txtAlltext").val() +"&_total=accurate&_sort";
+            var sendAlltext = $("#txtAlltext").val() + "&_total=accurate&_sort&_count=20&_page=1";
+            var sendAlltext2 = $("#txtAlltext").val();
+
+            if ($("#txtAlltext2").val() != "")
+            {
+                $("#txtAlltext2").val("");
+                $("#txtAlltext2").val(sendAlltext2);
+            } else
+            {
+                $("#txtAlltext2").val(sendAlltext2);
+            }
+           
             //var data2 = GetUrl2();
-            alert("現在傳送的是" + sendAlltext);
+            //alert("現在傳送的是" + sendAlltext);
 
              $.ajax({
                 type: 'POST',
@@ -2697,16 +2712,16 @@
                 },
                 //type: "POST",
                 dataType: "json",
-                success: function (data) {//第一層
+                 success: function (data) {//第一層
+                     //alert("可以喔");
                     /*var a=  JSON.stringify(msg)*/
                     //alert(msg);
-
-                    alert("data="+data);
-
+                    console.log(data);
                     var data = JSON.parse(data);
 
-                    var datatotal = data.total;//*****************資料總數
-                    //var datapagi = datatotal / 20;
+
+                     var datatotal = data.total;//*****************資料總數
+                     //var datapagi = datatotal / 20;
                     var datapagi = Math.floor(datatotal / 20);
 
                     //alert(datapagi)
@@ -2716,6 +2731,7 @@
                         //alert("有餘數");
                         //alert(datapagi);
                     }
+                                         $("#selpagi").removeAttr("hidden","hidden")
 
                     for (var i =1; i <= datapagi; i++)
                     {
@@ -2724,33 +2740,8 @@
                             text: i,
                         }));
                     }
-                    //$.each(items, function (i, item) {
-                    //    $('#mySelect').append($('<option>', {
-                    //        value: item.value,
-                    //        text: item.text
-                    //    }));
-                    //});
-                    //var select = $("#selpagi");
-                    //$(datapagi).each(function (datapagi) {
-                    //    alert(datapagi);
-                    //    select.append($('<option>', {
-                    //        value: datapagi.Value,
-                    //        text: datapagi.Value,
-                    //    }));
-                    //});
 
-                    //$.each(datatotal, function (i, datapagi) {
-                    //    //alert("2");
-                    //    select.append($('<option>', {
-                    //        value: datapagi.Value,
-                    //        text: datapagi.Value,
-                    //    }));
-                    //    //$("#selpagi").find("option:selected").attr("selected", true);
-
-                    //    //var s = $("#selpagi").find("option:selected").val();
-                    //    //alert(s);
-                    //    //div_card.find('input[name=Total_weight]').val(s)
-                    //});
+                    //var datatotal = data.total;//資料總數
 
                     //擷取頁數
                     var datac = data.link;
@@ -2762,11 +2753,8 @@
                     var getpages = datac_c.substring(datapageid, datapageid1);
                     var getpagesoffset = datac_c.substring(datapageid2, datapageid3);
 
-                    //***************新的頁面網址
+                    //新的頁面網址
                     var newurlpage = "https://hapi.fhir.org/baseR4?_getpages=" + getpages +"&_getpagesoffset="+ getpagesoffset+"&_count=20&_pretty=true&_bundletype=searchset";
-
-                    $("#txtBundleID").val(getpages);
-
 
                     console.log("12345----------");
                     console.log(datac_c);
@@ -2792,8 +2780,8 @@
                           /*欄位置頂*/
                           "fixedHeader": true,
                         "proccessing": true,
-                        "paging": false,
-
+                        "iDisplayLength": 20,/*一頁顯示筆數*/
+                        "paging": false, /*要不要分頁*/
                           //"serverSide": true,
                           @*"ajax": {
                               "url": "@Url.Action("Index2", "Home")",
@@ -3115,7 +3103,443 @@
             //$("#sleResource").val();
 
         })
+        /*舊的_結束*/
 
+        /*new0615起始*/
+        //不可刪
+        //$("#btnSendmulsearch").click(function () {
+        //    $('#p1').removeAttr('hidden');
+        //    var sendAlltext = $("#txtAlltext").val();/* +"&_total=accurate&_sort";*/
+            //var data2 = GetUrl2();
+            @*alert("現在傳送的是" + sendAlltext);
+
+             $.ajax({
+                type: 'POST',
+                url: "@Url.Action("Index2", "Home")",
+                data: {
+                    sendalltext: sendAlltext
+                },
+                //type: "POST",
+                dataType: "json",
+                 success: function (data) {//第一層
+                     alert(data);*@
+                    /*var a=  JSON.stringify(msg)*/
+                    ////alert(msg);
+                    //$("#selpagi").removeAttr("hidden","hidden")
+                    //alert("data="+data);
+
+                    //var data = JSON.parse(data);
+
+                    //var datatotal = data.total;//*****************資料總數
+                    ////var datapagi = datatotal / 20;
+                    //var datapagi = Math.floor(datatotal / 20);
+
+                    ////alert(datapagi)
+                    //if (datatotal % 20 != 0) {
+                    //    //有餘數
+                    //    datapagi += 1;
+                    //    //alert("有餘數");
+                    //    //alert(datapagi);
+                    //}
+
+                    //for (var i =1; i <= datapagi; i++)
+                    //{
+                    //    $("#selpagi").append($('<option>', {
+                    //        value: i,
+                    //        text: i,
+                    //    }));
+                    //}
+                    ////$.each(items, function (i, item) {
+                    ////    $('#mySelect').append($('<option>', {
+                    ////        value: item.value,
+                    ////        text: item.text
+                    ////    }));
+                    ////});
+                    ////var select = $("#selpagi");
+                    ////$(datapagi).each(function (datapagi) {
+                    ////    alert(datapagi);
+                    ////    select.append($('<option>', {
+                    ////        value: datapagi.Value,
+                    ////        text: datapagi.Value,
+                    ////    }));
+                    ////});
+
+                    ////$.each(datatotal, function (i, datapagi) {
+                    ////    //alert("2");
+                    ////    select.append($('<option>', {
+                    ////        value: datapagi.Value,
+                    ////        text: datapagi.Value,
+                    ////    }));
+                    ////    //$("#selpagi").find("option:selected").attr("selected", true);
+
+                    ////    //var s = $("#selpagi").find("option:selected").val();
+                    ////    //alert(s);
+                    ////    //div_card.find('input[name=Total_weight]').val(s)
+                    ////});
+
+                    ////擷取頁數
+                    //var datac = data.link;
+                    //var datac_c = datac[1].url;
+                    //var datapageid = datac_c.indexOf("getpages=") + 9;
+                    //var datapageid1 = datac_c.indexOf("&_getpagesoffset=");
+                    //var datapageid2 = datac_c.indexOf("&_getpagesoffset=") + 17;
+                    //var datapageid3 = datac_c.indexOf("&_count");
+                    //var getpages = datac_c.substring(datapageid, datapageid1);
+                    //var getpagesoffset = datac_c.substring(datapageid2, datapageid3);
+
+                    ////***************新的頁面網址
+                    //var newurlpage = "https://hapi.fhir.org/baseR4?_getpages=" + getpages +"&_getpagesoffset="+ getpagesoffset+"&_count=20&_pretty=true&_bundletype=searchset";
+
+                    //$("#txtBundleID").val(getpages);
+
+
+                    //console.log("12345----------");
+                    //console.log(datac_c);
+                    //console.log(datapageid);
+                    //console.log(datapageid1);
+                    //console.log("//////getpages////getpagesoffset");
+                    //console.log(getpages);
+                    //console.log(getpagesoffset);
+                    //console.log("//////newurlpage////datatotal");
+                    //console.log(newurlpage);
+                    //console.log(datatotal);
+                    ////alert("54565464454556");
+                    //console.log(data);
+                    ////console.log(searchResult);
+
+                    ////console.log(data3);
+                    //ReBuilddatatable();
+                    //var newHtml = "";
+
+
+                    //var table = $("#cutomerTable").DataTable({
+                    //    "searching": true,
+                    //      /*欄位置頂*/
+                    //      "fixedHeader": true,
+                    //    "proccessing": true,
+                    //    "paging": false,
+                          //"serverSide": true,
+                          @*"ajax": {
+                              "url": "@Url.Action("Index2", "Home")",
+                              "type": "POST",
+                          },*@
+            //              "data": data.entry,
+            //              "datatype": "json",
+            //              "columnDefs": [{
+            //                  "targets": '_all',
+            //                  "defaultContent": ""
+            //            }],
+            //            "dom": 'Bfrtip',
+            //            "buttons": [
+            //                'copy', 'excel', 'print'
+            //            ],
+            //              "columns": [
+            //                  { "data": "resource.id", "name": "id", "title": "id" },
+            //                  { "data": "resource.identifier[, ].value", "name": "identifier", "title": "Identifier" },
+            //                  { "data": "resource.name[, ].text", "name": "name", "title": "姓名" },
+            //                  { "data": "resource.gender", "name": "gender", "title": "性別"},
+            //                  { "data": "resource.birthDate", "name": "birthdate", "title": "生日"},
+            //                  {
+            //                      "data": "resource.id",
+            //                      "name": "id",
+            //                      "title": "連結",
+            //                      "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+            //                          if (nTd < 1) {
+            //                              $(td).css('color', 'red');
+            //                          } else
+            //                          {
+            //                              $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href = "' + baseSiteURL + 'Resource/' + oData.resource.resourceType + '/' + oData.resource.id+ '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >');
+            //                              //$(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href="' + baseSiteURL + 'Resource/' + oData.resourceType + '/' + oData.id + '"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a>');
+
+            //                          }
+            //                      }
+            //                      //"fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+            //                      //    //newHtml += '<td> <a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/Patient/' + entry.resource.id + '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >';
+            //                                                    //"createdCell": function (td, cellData, rowData, row, col) {
+
+
+            //                      //    $(nTd).addClass('text-center');
+            //                      //    $(nTd).html('<a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/Patient/' + entry.resource.id + '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >');
+            //                      //}
+            //                  },
+
+            //              ]
+
+            //          });
+
+            //    },
+            //    error: function (data) {
+            //        alert("no");
+            //    },
+            //    beforeSend: function () {
+            //        $('.loadingdiv').show();
+            //    },
+            //    complete: function () {
+            //        $('.loadingdiv').hide();
+            //    }
+            //});
+
+
+
+
+
+            /*現在可以用start*/
+              @*$.ajax({
+                type: 'POST',
+                url: "@Url.Action("Index2", "Home")",
+                  data: {
+                      sendalltext: sendAlltext
+                  },
+                //type: "POST",
+                dataType: "json",
+                  success: function (data) {//第一層
+                    /*var a=  JSON.stringify(msg)*/
+                      //alert(msg);
+                      var searchResult = JSON.parse(data);
+                      //console.log(data);
+                      //console.log(searchResult);
+                      let number = searchResult.entry.length;
+                      totalnumber = number;
+                      alert(searchResult.entry.length);
+                      //var a = searchResult.entry.resource.id;
+                      //alert(a.length);
+
+
+
+                      //console.log(data3);
+                      ReBuilddatatable();
+                      //string url = ;
+
+
+                      var getUrlString = location.href;
+                      var NewString_con = getUrlString.split(",");
+
+
+                      if (searchResult != null) {
+                          var newHtml = "";
+
+                          var panginationdiv = "";
+
+
+
+
+                          newHtml += '<tr>';
+                          newHtml += '<td>id</td>';
+                          newHtml += '<td>identifier</td>';
+                          newHtml += '<td>姓名</td>';
+                          newHtml += '<td>性別</td>';
+                          newHtml += '<td>出生年月日</td>';
+                          newHtml += '<td>連結</td>';
+
+                          newHtml += '</tr>';
+
+                          let num = 0;
+                          let num2 = 0;
+                          alert(getUrlString);
+                          $.each(searchResult.entry, function (index, entry) {
+
+
+                              num += 1;
+                              //console.log(searchResult);
+
+                              //alert("1");
+                              //alert(entry.resource.id);
+                              //alert(entry.resource.identifier[0].value);//因為值藏在[{}]裡，所以要加[0]
+                              ////alert(entry.resource.name[0].family + entry.resource.name[0].given);
+                              //alert(entry.resource.gender);
+                              //alert(entry.resource.birthDate);
+
+
+                              //0622new_start
+                              //$('#cutomerTable').DataTable({
+                              //    data: searchResult,
+                              //    columns: [
+                              //        { data: 'entry.resource.id' },
+                              //        { data: 'entry.resource.identifier[0].value' },
+                              //        { data: 'entry.resource.gender' },
+                              //        { data: 'entry.resource.birthDate' }
+                              //    ]
+                              //});
+                              //0622new_end
+
+
+                              newHtml += '<tr class =pag_' + num + '>';
+
+                              newHtml += '<td>' + num + '</td>';
+                              newHtml += '<td>' + entry.resource.identifier[0].value + '</td>';
+                              newHtml += '<td></td>';
+                              newHtml += '<td>' + entry.resource.gender + '</td>';
+                              newHtml += '<td>' + entry.resource.birthDate + '</td>';
+
+                              newHtml += '<td> <a class="btn drp-icon btn-outline-info dropdown-toggle" href = "/Resource/Patient/' + entry.resource.id + '" ><span class="pcoded-micon"><i class="feather icon-file-text"></i></span></a >';
+                              newHtml += '</tr>';
+
+
+                              if (num % 10 == 0) {
+
+                                  //alert(num + "是10的倍数");
+                                  num2 += 1;
+                                  alert(num2);
+                                  //panginationdiv += '<li> <a href =Index2?' + num2 + '>' + num2 + '</li>';
+                                  panginationdiv += '<button onclick="A(' + num2 + ')">' + num2 + '</button>';
+                                  //panginationdiv += '<li><a href="' + NewString_con + '?aaapage=' + num2 + '\">' + num2 + '</a></li>';
+                              //    alert(panginationdiv);
+                              };
+                              $("#texttt").html(panginationdiv);
+                          });
+
+                          $("#cutomerTable2").html(newHtml);
+                          for (M = 11; M <= totalnumber; M++)//11~最後 hide
+                          {
+                              $('.pag_' + M).attr("hidden", true);
+                          }
+
+
+                          //var text = $("#txtAlltext").val();
+                          //$(function () {
+                          //    var container = $('#cutomerTable');
+                          //    container.pagination({
+                          //        dataSource: 'https://api.flickr.com/services/feeds/photos_public.gne?tags=cat&tagmode=any&format=json&jsoncallback=?',
+                          //        locator: 'items',
+                          //        totalNumber: 20,
+                          //        pageSize: 3,
+                          //        ajax: {
+                          //            beforeSend: function () {
+                          //                container.prev().html('Loading data from flickr.com ...');
+                          //            }
+                          //        },
+                          //        callback: function (response, pagination) {
+                          //            alert("u.3rup4");
+                          //            var dataHtml = '<ul>';
+                          //            var pageStart = (pagination.pageNumber - 1) * pagination.pageSize;
+                          //            var pageEnd = pageStart + pagination.pageSize;
+                          //            var pageItems = response.slice(pageStart, pageEnd);
+                          //            alert("pagination.pageSize=" + pagination.pageSize);
+                          //            alert("pagination.pageNumber=" + pagination.pageNumber);
+                          //            alert("pageStart="+pageStart);
+                          //            alert("pageEnd="+pageEnd);
+                          //            alert("pageItems="+pageItems);
+                          //            $.each(pageItems, function (index, item) {
+                          //                alert("耶");
+                          //                dataHtml += '<li>' + item.title + '</li>';
+                          //            });
+
+                          //            dataHtml += '</ul>';
+
+                          //            container.prev().html(dataHtml);
+                          //        }
+                          //    })
+                          //})
+
+                           //$(function () {
+                           //    var container = $('#cutomerTable');
+                           //   container.pagination({
+                           //       dataSource: 'data',
+                           //       locator: 'entry',
+                           //       totalNumber: number,
+                           //       pageSize: 10,
+                           //       ajax: {
+                           //           beforeSend: function () {
+                           //               container.prev().html('救命');
+                           //           }
+                           //       },
+                           //       callback: function (response, pagination) {
+                           //           var dataHtml = '<ul>';
+                           //           var pageStart = (pagination.pageNumber - 1) * pagination.pageSize;
+                           //           var pageEnd = pageStart + pagination.pageSize;
+                           //           var pageItems = response.slice(pageStart, pageEnd);
+                           //           alert("pagination.pageSize=" + pagination.pageSize);
+                           //           alert("pagination.pageNumber=" + pagination.pageNumber);
+                           //           alert("pageStart="+pageStart);
+                           //           alert("pageEnd="+pageEnd);
+                           //           alert("pageItems="+pageItems);
+                           //           $.each(pageItems, function (index, item) {
+                           //               alert("耶");
+                           //               dataHtml += '<li>' + item.fullUrl + '</li>';
+                           //           });
+
+                           //           dataHtml += '</ul>';
+
+                           //           container.prev().html(dataHtml);
+                           //       }
+                           //   })
+                           //})
+                      //    $("#cutomerTable").DataTable(newHtml);
+                      } else
+                      {
+                          newHtml += '<tr>';
+                          newHtml += '<td>查無資料</td>';
+                          newHtml += '</tr>';
+
+                          alert("沒有資料");
+                      }
+
+
+
+                },
+                  error: function (data) {
+                      alert("no");
+                },
+                beforeSend: function () {
+                    $('.loadingdiv').show();
+                },
+                complete: function () {
+                    $('.loadingdiv').hide();
+                }
+            });*@
+            /*現在可以用end*/
+            @*$.ajax({
+                type: 'POST',
+                url: "@Url.Action("Index2", "Home")",
+                data: {
+                    sendalltext: sendAlltext
+                },
+                type: "POST",
+                dataType: "json",
+                success: OnSuccess,
+                success: function (msg)
+                {
+                    ReBuilddatatable();
+                    var test2 = JSON.parse(msg);
+
+                    $('#cutomerTable').DataTable({
+                        processing: true,
+                        serverSide: true,
+
+                        ajax: {
+                            url: "@Url.Action("Index2", "Home")",
+                            type: 'POST',
+                            data: {
+                                sendalltext: sendAlltext
+                            },
+                        },
+                        columns: [
+                             { "data": "id", "name": "id", "title": "id" },
+//                    { "data": "identifier[, ].value", "name": "identifier", "title": "Identifier" }
+                        ],
+                    });
+                },
+                  error: function (data) {
+                      alert("no");
+                },
+                beforeSend: function () {
+                    $('.loadingdiv').show();
+                },
+                complete: function () {
+                    $('.loadingdiv').hide();
+                }
+            });*@
+
+        //    $("#txtAlltext").val("");
+        //    $("#searchresult2").empty();
+        //    $("#txtWrite").val("");
+        //    $("#txtDate").val("");
+        //    $("#txtValueQ").val("");
+
+        //    //$("#sleResource").val();
+
+        //})
+       //不可刪
 
         $("#btnclean").click(function () {
             $('#p1').removeAttr('hidden');
@@ -3149,26 +3573,27 @@
         /*0722_new_start*/
         $("#selpagi").change(function () {
             var pagi = $("#selpagi option:selected").val();
-            var pagi2 = (pagi - 1) * 20;
+            //var pagi2 = (pagi - 1) * 20;
+            var sendAlltext3 = $("#txtAlltext2").val();
 
-            alert(pagi);
-            alert("現在資料比數"+pagi2);
-            var getpages = $('#txtBundleID').val();
-            var getpagesoffset = pagi2;
+            //alert(pagi);
+            //alert("現在資料比數"+pagi2);
+            //var getpages = $('#txtBundleID').val();
+            //var getpagesoffset = pagi2;
 
             //alert(getpages);
-            var newurlpage = "https://hapi.fhir.org/baseR4?_getpages=" + getpages + "&_getpagesoffset=" + getpagesoffset + "&_count=20&_pretty=true&_bundletype=searchset";
+            var newurlpage = sendAlltext3 + "&_total=accurate&_sort&_count=20&_page=" + pagi ;
 
              $.ajax({
                 type: 'POST',
-                url: "@Url.Action("Index2_2", "Home")",
+                url: "@Url.Action("Index2", "Home")",
                 data: {
                     sendalltext: newurlpage
                 },
                 //type: "POST",
                 dataType: "json",
                  success: function (data) {//第一層
-                     alert(data);
+                     //alert(data);
                      alert("ok");
                     /*var a=  JSON.stringify(msg)*/
                     //alert(msg);

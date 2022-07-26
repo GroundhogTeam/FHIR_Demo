@@ -74,9 +74,12 @@ namespace FHIR_Demo.Controllers
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;//憑證一定要通過
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;//版本
             HttpClient client = new HttpClient(); //請求
-            //client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Authorization);
-
+                                                  //client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Authorization);
+            var Username = ConfigurationManager.AppSettings.Get("Username");
+            var Password = ConfigurationManager.AppSettings.Get("Password");
             //var response = await client.GetAsync(url);
+            var byteArray = Encoding.ASCII.GetBytes($"{Username}:{Password}");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
             var response = await client.GetAsync(url);
             var result = response.Content.ReadAsStringAsync().Result;
