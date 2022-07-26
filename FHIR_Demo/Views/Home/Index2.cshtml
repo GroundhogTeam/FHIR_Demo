@@ -30,8 +30,40 @@
             max-height: 280px;
             overflow-y: auto;
         }
+        /*lodingstyle*/
+        div.loadingdiv {
+            /*            height: 100%;*/
+            height: 100%;
+            /*100%覆蓋網頁內容, 避免user在loading時進行其他操作*/ width: 100%;
+            position: fixed;
+            z-index: 99999;
+            /*須大於網頁內容*/ top: 0;
+            left: 0;
+            display: block;
+            background: #000;
+            opacity: 0.6;
+            text-align: center;
+        }
+
+            div.loadingdiv img {
+                position: relative;
+                vertical-align: middle;
+                text-align: center;
+                margin: 0 auto;
+                margin-top: 50vh;
+            }
     </style>
 }
+<div class="loadingdiv" id="loading" style="display: none">
+    @*<div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+            </svg>
+        </div>*@
+    <div style="margin-top:20%;">
+        <i class="fa fa-spinner fa-spin" style="font-size:100px;"></i>
+    </div>
+</div>
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
@@ -326,7 +358,7 @@
                     </table>
                     <div class="form-group">
                         <div class="d-flex justify-content-end" style="font-size: larger; margin-left: 20px;">
-                            <select id="selpagi" class="form-control btn-outline-secondary dropdown-toggle col-md-2" hidden="hidden" >
+                            <select id="selpagi" class="form-control btn-outline-secondary dropdown-toggle col-md-2" hidden="hidden">
                                 @*<option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -2700,7 +2732,7 @@
             {
                 $("#txtAlltext2").val(sendAlltext2);
             }
-           
+
             //var data2 = GetUrl2();
             //alert("現在傳送的是" + sendAlltext);
 
@@ -2715,7 +2747,11 @@
                  success: function (data) {//第一層
                      //alert("可以喔");
                     /*var a=  JSON.stringify(msg)*/
-                    //alert(msg);
+                     //alert(msg);
+                     if (JSON.stringify(data) == 500)
+                     {
+                         alert("伺服器逾時，請重新操作");
+                     }
                     console.log(data);
                     var data = JSON.parse(data);
 
@@ -2833,7 +2869,7 @@
 
                 },
                 error: function (data) {
-                    alert("no");
+                    alert("Error");
                 },
                 beforeSend: function () {
                     $('.loadingdiv').show();
@@ -3594,9 +3630,12 @@
                 dataType: "json",
                  success: function (data) {//第一層
                      //alert(data);
-                     alert("ok");
+                     //alert("ok");
                     /*var a=  JSON.stringify(msg)*/
                     //alert(msg);
+                     if (JSON.stringify(data) == 500) {
+                         alert("伺服器逾時，請重新操作");
+                     }
                     var data = JSON.parse(data);
                      var select = $("#selpagi");
 
@@ -3696,9 +3735,9 @@
 
                 },
                 error: function (data) {
-                    alert("no");
+                    alert("Error");
                 },
-                beforeSend: function () {
+               beforeSend: function () {
                     $('.loadingdiv').show();
                 },
                 complete: function () {

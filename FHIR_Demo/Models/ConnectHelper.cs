@@ -28,7 +28,16 @@ namespace FHIR_Demo.Models
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
             var response = await client.GetAsync(url);
-            return response.Content.ReadAsStringAsync().Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)/*回傳500*/
+            {
+                return "500";
+            }
+            else
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                return result;
+            }
+            //return response.Content.ReadAsStringAsync().Result;
         }
     }
 }

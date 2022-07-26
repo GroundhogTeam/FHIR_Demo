@@ -82,8 +82,18 @@ namespace FHIR_Demo.Controllers
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
             var response = await client.GetAsync(url);
-            var result = response.Content.ReadAsStringAsync().Result;
-            return result;
+            if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)/*回傳500*/
+            {
+                return "500";
+            }
+            else
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                return result;
+            }
+
+            //var result = response.Content.ReadAsStringAsync().Result;
+            //return result;
           
         }
 
@@ -94,8 +104,15 @@ namespace FHIR_Demo.Controllers
             //var Getomi_json = "'entry': [{'fullUrl': 'http://10.40.8.45:8080/fhir/Patient/C04DA5FB362ACBE0D8B8E889364A10C9DA0E6E76'} ]";
             var Getomi_json = await Get_MultipleSearch(sendalltext);
             ViewBag.getjson = Getomi_json;
-            return Json(Getomi_json);
-           
+            if (Getomi_json == "500")
+            {
+                return Json(500);
+            }
+            else 
+            {
+                return Json(Getomi_json);
+            }
+
         }
 
 
