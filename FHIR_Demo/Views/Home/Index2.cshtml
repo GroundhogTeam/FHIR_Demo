@@ -2416,8 +2416,8 @@
         department[4] = ["identifier", "authored", "occurrence"];// servicerequest
         department[5] = ["identifier", "code", "result","date"];// diagnosticreport
         department[6] = ["identifier", "code", "date", "value-quantity","component-value-quantity"];// observation
-        department[7] = ["identifier", "code", "bodySite"];// procedure
-        department[8] = ["identifier", "code", "bodySite"];// condition
+        department[7] = ["identifier", "code", "body-site"];// procedure
+        department[8] = ["identifier", "code", "body-site"];// condition
         department[9] = ["identifier", "authored"];// medicationrequest
 
 
@@ -2469,7 +2469,9 @@
             $('#txtComVQ').val();
 
 
-            if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "bodySite") {
+            if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "body-site") {
+
+                alert("會");
                 //alert("文字");
                 $('#txtWrite').removeAttr('hidden');
                 $('#txtDate').attr('hidden', true);
@@ -2577,7 +2579,7 @@
 
 
 
-            if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "bodySite") {
+            if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "body-site") {
                 //文字
                 var txtwriting = $("#txtWrite").val();
             }
