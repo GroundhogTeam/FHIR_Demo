@@ -2617,9 +2617,9 @@
 
             var newHtml2 = "";
 
-            newHtml2 += '<div class="">';
+            //newHtml2 += '<div class="">';
             newHtml2 += resourcevalue + '-' + secvalue + ':' + txtwriting + ',';
-            newHtml2 += '</div>';
+            //newHtml2 += '</div>';
 
             $("#searchresult2").append(newHtml2);
 
@@ -2721,7 +2721,7 @@
 
         //舊的_起始
         $("#btnSendmulsearch").click(function () {
-            $('#p1').removeAttr('hidden');
+            $('#p1').removeAttr("hidden", "hidden");
             //var sendAlltext = $("#txtAlltext").val() +"&_total=accurate&_sort";
             var sendAlltext = $("#txtAlltext").val() + "&_total=accurate&_sort&_count=20&_page=1";
             var sendAlltext2 = $("#txtAlltext").val();
@@ -3580,7 +3580,7 @@
        //不可刪
 
         $("#btnclean").click(function () {
-            $('#p1').removeAttr('hidden');
+            $('#p1').removeAttr(("hidden", "hidden"));
             $("#txtAlltext").val("");
             $("#searchresult2").empty();
         })
