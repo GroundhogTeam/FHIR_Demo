@@ -68,7 +68,7 @@ namespace FHIR_Demo.Controllers
         public async Task<string> Get_MultipleSearch(string sendalltext)
         {
             //a = Request.Form["sendAlltext"];
-            var url = ConfigurationManager.AppSettings.Get("FHIRMULSEARCHAPI") + sendalltext;
+            var url = ConfigurationManager.AppSettings.Get("FHIRAPI") + "/"+ sendalltext; //改FHIRAPI
             //var Authorization = ConfigurationManager.AppSettings.Get("Authorization");
 
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;//憑證一定要通過
@@ -162,7 +162,7 @@ namespace FHIR_Demo.Controllers
         public async Task<string> Get_MultipleSearch_3()
         {
             //a = Request.Form["sendAlltext"];
-            var url = ConfigurationManager.AppSettings.Get("FHIRMULSEARCHAPI");
+            var url = ConfigurationManager.AppSettings.Get("FHIRAPI"); //改FHIRAPI
             //var Authorization = ConfigurationManager.AppSettings.Get("Authorization");
 
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;//憑證一定要通過
