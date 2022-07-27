@@ -2754,8 +2754,11 @@
                      {
                          alert("伺服器逾時，請重新操作");
                      }
+                     console.log("-------");
                     console.log(data);
-                    var data = JSON.parse(data);
+                     var data = JSON.parse(data);
+                     console.log("-------pase");
+                     console.log(data);
 
 
                      var datatotal = data.total;//*****************資料總數
@@ -2783,7 +2786,7 @@
 
                     //擷取頁數
                     var datac = data.link;
-                    var datac_c = datac[1].url;
+                    var datac_c = datac[0].url;//這個網站的差別
                     var datapageid = datac_c.indexOf("getpages=") + 9;
                     var datapageid1 = datac_c.indexOf("&_getpagesoffset=");
                     var datapageid2 = datac_c.indexOf("&_getpagesoffset=") + 17;
