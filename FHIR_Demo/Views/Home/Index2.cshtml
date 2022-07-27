@@ -1706,7 +1706,7 @@
                 "serverSide": true,
                 "paging": false,
                 "ajax": {
-                    "url": "@Url.Action("GetResource", "Home")",
+                    "url": "@Url.Action("Index2_3", "Home")",
                     "type": "POST",
                     "data": data.entry,
                     "datatype": "json"
@@ -2786,7 +2786,7 @@
 
                     //擷取頁數
                     var datac = data.link;
-                    var datac_c = datac[0].url;//這個網站的差別
+                    var datac_c = datac[0].url;//這個網站的差別 原本給出的資料是第0個
                     var datapageid = datac_c.indexOf("getpages=") + 9;
                     var datapageid1 = datac_c.indexOf("&_getpagesoffset=");
                     var datapageid2 = datac_c.indexOf("&_getpagesoffset=") + 17;

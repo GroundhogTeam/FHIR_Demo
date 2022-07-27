@@ -116,7 +116,7 @@ namespace FHIR_Demo.Controllers
         }
 
 
-        //寫分頁的那個
+        //hapi寫分頁的那個 Index2_2
         [HttpGet]
         public async Task<string> Get_MultipleSearch_2(string sendalltext)
         {
@@ -147,7 +147,49 @@ namespace FHIR_Demo.Controllers
 
         }
 
+        public async Task<ActionResult> Index2_3()
+        {
+           
+            //var Getomi_json = "'entry': [{'fullUrl': 'http://10.40.8.45:8080/fhir/Patient/C04DA5FB362ACBE0D8B8E889364A10C9DA0E6E76'} ]";
+            var Getomi_json = await Get_MultipleSearch_3();
+            ViewBag.getjson = Getomi_json;
+            return Json(Getomi_json);
 
+        }
+
+        //Index2_3
+        [HttpGet]
+        public async Task<string> Get_MultipleSearch_3()
+        {
+            //a = Request.Form["sendAlltext"];
+            var url = ConfigurationManager.AppSettings.Get("FHIRMULSEARCHAPI");
+            //var Authorization = ConfigurationManager.AppSettings.Get("Authorization");
+
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;//憑證一定要通過
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;//版本
+            HttpClient client = new HttpClient(); //請求
+                                                  //client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Authorization);
+            var Username = ConfigurationManager.AppSettings.Get("Username");
+            var Password = ConfigurationManager.AppSettings.Get("Password");
+            //var response = await client.GetAsync(url);
+            var byteArray = Encoding.ASCII.GetBytes($"{Username}:{Password}");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+
+            var response = await client.GetAsync(url);
+            if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)/*回傳500*/
+            {
+                return "500";
+            }
+            else
+            {
+                var result = response.Content.ReadAsStringAsync().Result;
+                return result;
+            }
+
+            //var result = response.Content.ReadAsStringAsync().Result;
+            //return result;
+
+        }
         public ActionResult test01()
         {
             return View();
