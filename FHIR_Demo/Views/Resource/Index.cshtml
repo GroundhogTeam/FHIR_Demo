@@ -1211,11 +1211,19 @@
                                 <tr>
                                     <th scope="row">疾病診斷名稱</th>
                                     <td>
-                                        @if (Res_Search.code.coding != null)
+                                        @if (Res_Search.code != null)
                                         {
-                                            @Res_Search.code.coding[0].display<br>
-                                            @:說明:@Res_Search.code.text
+                                            if (Res_Search.code.coding != null)
+                                            {
+                                                @Res_Search.code.coding[0].display<br>
+                                                @:說明:@Res_Search.code.text
+                                            }
+                                            else
+                                            {
+                                                @:無
+                                            }
                                         }
+
                                         else
                                         {
                                             @:無
