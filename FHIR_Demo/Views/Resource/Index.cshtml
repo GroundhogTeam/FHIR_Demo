@@ -729,7 +729,15 @@
                                                     說明：@(res.code.text)
                                                 </p>
                                             }
+                                            @if (res.bodySite != null)
+                                            {
+                                                <p>
+                                                    原發部位：@(res.bodySite[0].text != null ? (res.bodySite[0].text ?? null ): "")<br>
+                                                    診斷代碼：@(res.bodySite[0].coding[0] != null ? (res.bodySite[0].coding[0].code ?? null ): "") <br>
+                                                </p>
+                                            }
                                         </div>
+
                                     </a>
                                 </div>
                             </article>
@@ -1241,6 +1249,29 @@
                                             {
                                                 @onsetDateTime.Value.ToString("tt hh:mm")
                                             }
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">疾病診斷部位</th>
+                                    <td>
+                                        @if (Res_Search.bodySite != null)
+                                        {
+                                            if (Res_Search.bodySite[0].coding != null)
+                                            {
+                                                @Res_Search.bodySite[0].coding[0].code<br>
+                                                @:說明:@Res_Search.bodySite[0].text
+                                            }
+                                            else
+                                            {
+                                                @:無
+                                            }
+                                        }
+
+                                        else
+                                        {
+                                            @:無
                                         }
                                     </td>
                                     <td></td>
