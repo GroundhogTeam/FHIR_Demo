@@ -2411,14 +2411,14 @@
         department = new Array();
         department[0] = [];
         department[1] = ["identifier", "birthdate", "gender"];//Patient
-        department[2] = ["identifier", "class", "date"];// Encounter
+        department[2] = ["identifier", "class", "date","reason-code"];// Encounter
         department[3] = ["identifier", "name", "gender"];// practitioner
         department[4] = ["identifier", "authored", "occurrence"];// servicerequest
         department[5] = ["identifier", "code", "result","date"];// diagnosticreport
-        department[6] = ["identifier", "code", "date", "value-quantity","component-value-quantity"];// observation
-        department[7] = ["identifier", "code", "body-site"];// procedure
+        department[6] = ["identifier", "code", "date", "value-quantity", "component-value-quantity", "value-concept","category"];// observation
+        department[7] = ["identifier", "code", "category","reason-code","date"];// procedure
         department[8] = ["identifier", "code", "body-site"];// condition
-        department[9] = ["identifier", "authored"];// medicationrequest
+        department[9] = ["identifier", "date", "category","code"];// medicationrequest
 
 
 
@@ -2428,6 +2428,11 @@
             for (var i = 0; i < department[index].length; i++)
                 document.myForm.member.options[i] = new Option(department[index][i], department[index][i]);	// 設定新選項
             document.myForm.member.length = department[index].length;	// 刪除多餘的選項
+
+            $("#txtWrite").val("");
+            $("#txtComVQ").val("");
+            $("#txtValueQ").val("");
+            $("#txtDate").val("");
             //$('#txtWrite').attr('hidden', true);
             //$('#rdbGender').attr('hidden', true);
             //$('#txtDate').attr('hidden', true);
@@ -2468,8 +2473,8 @@
             $('#txtValueQ').val("");
             $('#txtComVQ').val();
 
-
-            if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "body-site") {
+            //text
+            if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "body-site" || secvalue == "reason-code" || secvalue == "value-concept" || secvalue =="category") {
 
                 //alert("會");
                 //alert("文字");
@@ -2486,6 +2491,7 @@
 
 
             }
+            //rdb
             else if (secvalue == "gender") {
                 //alert("rdb");
                 $('#rdbClass').attr('hidden', true);
@@ -2502,6 +2508,7 @@
 
                 /*                var abc = $('input[name="gender"]:checked').val();*/
             }
+                //rdb
             else if (secvalue == "class") {
                 $('#rdbClass').removeAttr('hidden');
                 $('#rdbGender').attr('hidden', true);
@@ -2515,7 +2522,8 @@
                 $('#selComVQ').attr('hidden', true);
 
             }
-            else if (secvalue == "authored" || secvalue == "occurrence" || secvalue == "date" || secvalue == "birthdate") {
+                //text
+            else if (secvalue == "authoredon" || secvalue == "occurrence" || secvalue == "date" || secvalue == "birthdate") {
                 //alert("日期");
                 $('#txtDate').removeAttr('hidden');
                 //$('#txtValueQ').removeAttr('hidden');
@@ -2530,6 +2538,7 @@
                 $('#rdbClass').attr('hidden', true);
                 $('#txtWrite').attr('hidden', true);
             }
+                //text
             else if (secvalue == "value-quantity") {
                 $('#txtDate').attr('hidden', true);
                 $('#txtValueQ').removeAttr('hidden');
@@ -2544,6 +2553,7 @@
                 $('#txtWrite').attr('hidden', true);
 
             }
+                //text
             else if (secvalue == "component-value-quantity")
             {
                 $('#txtDate').attr('hidden', true);
@@ -2579,7 +2589,7 @@
 
 
 
-            if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "body-site") {
+            if (secvalue == "identifier" || secvalue == "name" || secvalue == "code" || secvalue == "result" || secvalue == "body-site" || secvalue == "reason-code" || secvalue == "value-concept" || secvalue == "category") {
                 //文字
                 var txtwriting = $("#txtWrite").val();
             }
@@ -2595,7 +2605,7 @@
                 //alert("性別" + txtwriting);
 
             }
-            else if (secvalue == "authored" || secvalue == "occurrence" || secvalue == "date" || secvalue == "birthdate") {
+            else if (/*secvalue == "authoredon" ||*/ secvalue == "occurrence" || secvalue == "date" || secvalue == "birthdate") {
                 //日曆
                 var equdate = $("#selbigsmall option:selected").val();
                 var txtwriting = equdate + $("#txtDate").val();
@@ -2714,6 +2724,7 @@
                     //alert(str);
                 }
             }
+
 
         }
         /*new0609*/
@@ -3664,7 +3675,7 @@
 
                     //擷取頁數
                     var datac = data.link;
-                    var datac_c = datac[1].url;
+                     var datac_c = datac[0].url;//差異差別這邊也要改
                     var datapageid = datac_c.indexOf("getpages=") + 9;
                     var datapageid1 = datac_c.indexOf("&_getpagesoffset=");
                     var datapageid2 = datac_c.indexOf("&_getpagesoffset=") + 17;

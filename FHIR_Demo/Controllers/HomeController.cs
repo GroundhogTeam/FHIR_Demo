@@ -23,6 +23,7 @@ namespace FHIR_Demo.Controllers
             return View();
         }
 
+        //index2
         public ActionResult Index2()
         {
             //var selectList = new List<SelectListItem>()
@@ -97,7 +98,6 @@ namespace FHIR_Demo.Controllers
           
         }
 
-
         [HttpPost]
         public async Task<ActionResult> Index2(string sendalltext)
         {
@@ -114,7 +114,6 @@ namespace FHIR_Demo.Controllers
             }
 
         }
-
 
         //hapi寫分頁的那個 Index2_2
         [HttpGet]
@@ -190,6 +189,8 @@ namespace FHIR_Demo.Controllers
             //return result;
 
         }
+
+
         public ActionResult test01()
         {
             return View();
