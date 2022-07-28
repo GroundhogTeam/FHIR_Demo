@@ -1009,6 +1009,48 @@
                                     <td></td>
                                 </tr>
                                 <tr>
+                                    <th scope="row">參照連結</th>
+                                    <td>
+                                        @if (Res_Search.code != null)
+                                        {
+                                            if (Res_Search.code.coding != null)
+                                            {
+                                                @Res_Search.code.coding[0].system
+                                            }
+                                            else
+                                            {
+                                                @:無
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">檢驗項目代碼</th>
+                                    <td>
+                                        @if (Res_Search.code != null)
+                                        {
+                                            if (Res_Search.code.coding != null)
+                                            {
+                                                @Res_Search.code.coding[0].code
+                                            }
+                                            else
+                                            {
+                                                @:無
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
                                     <th scope="row">檢驗部位</th>
                                     <td>
                                         @if (Res_Search.bodySite != null)
@@ -1046,6 +1088,7 @@
                                     </td>
                                     <td></td>
                                 </tr>
+
                             </tbody>
 
                         </table>
