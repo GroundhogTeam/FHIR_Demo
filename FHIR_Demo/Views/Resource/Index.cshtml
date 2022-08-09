@@ -1029,6 +1029,7 @@
                                     </td>
                                     <td></td>
                                 </tr>
+                                
                                 <tr>
                                     <th scope="row">檢驗項目代碼</th>
                                     <td>
@@ -1036,11 +1037,22 @@
                                         {
                                             if (Res_Search.code.coding != null)
                                             {
-                                                @Res_Search.code.coding[0].code
+                                                @Res_Search.code.coding[0].code@:(LOINC)<br>
                                             }
-                                            else
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                        @if (Res_Search.category != null)
+                                        {
+                                            if (Res_Search.category[0].coding != null)
                                             {
-                                                @:無
+                                                if (Res_Search.category[0].coding[0].code != null)
+                                                {
+                                                    @Res_Search.category[0].coding[0].code@:(AJCC)<br>
+                                                }
+
                                             }
                                         }
                                         else
