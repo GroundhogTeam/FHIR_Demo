@@ -562,30 +562,30 @@
                                             <h4 class="timeline-title">檢驗檢查/觀察值</h4>
                                             @if (res.code != null)
                                             {
-                                        <p>
-                                            @if (res.code.coding != null)
-                                            {
-                                                @:參照連結：@(res.code.coding[0].system)
-                                                <br>
-                                                @:檢驗項目代碼：@(res.code.coding[0].code) (LOINC)&nbsp;
-                                                if (res.category != null)
-                                                {
-                                                    if (res.category[0].coding != null)
+                                                <p>
+                                                    @if (res.code.coding != null)
                                                     {
-                                                        if (res.category[0].coding[0].code != null)
+                                                        @:參照連結：@(res.code.coding[0].system)
+                                                        <br>
+                                                        @:檢驗項目代碼：@(res.code.coding[0].code) (LOINC)&nbsp;
+                                                        if (res.category != null)
                                                         {
-                                                            @(res.category[0].coding[0].code)@:(AJCC)
+                                                            if (res.category[0].coding != null)
+                                                            {
+                                                                if (res.category[0].coding[0].code != null)
+                                                                {
+                                                                    @(res.category[0].coding[0].code)@:(AJCC)
+                                                                }
+
+                                                            }
                                                         }
+                                                        <br>
 
+                                                        @:檢驗項目名稱：@(res.code.coding[0].display)
+                                                        <br>
                                                     }
-                                                }
-                                                <br>
-
-                                                @:檢驗項目名稱：@(res.code.coding[0].display)
-                                                <br>
-                                            }
-                                            說明：@(res.code.text)
-                                        </p>
+                                                    說明：@(res.code.text)
+                                                </p>
                                             }
                                         </div>
                                     </a>
@@ -940,11 +940,29 @@
                                     <td></td>
                                 </tr>
                                 <tr>
+                                    <th scope="row">戶籍地代碼</th>
+                                    <td>
+                                        @if (Res_Search.address != null)
+                                        {
+                                            if (Res_Search.address[0].postalCode != null)
+                                            {
+                                                @Res_Search.address[0].postalCode
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
                                     <th scope="row">生存狀態</th>
                                     <td>
                                         @if (Res_Search.deceased != null)
                                         {
-                                            switch (Res_Search.gender.ToString())
+                                            switch (Res_Search.deceased.ToString())
                                             {
                                                 case "1":
                                                     @:存活
@@ -962,20 +980,7 @@
                                     </td>
                                     <td></td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">溝通語言</th>
-                                    <td>
-                                        @if (Res_Search.communication != null)
-                                        {
-                                            @(Res_Search.communication[0].language.text != null ? Res_Search.communication[0].language.text : (Res_Search.communication[0].language.text.ToString()) ?? "無")
-                                        }
-                                        else
-                                        {
-                                            @:無
-                                        }
-                                    </td>
-                                    <td></td>
-                                </tr>
+
                             </tbody>
 
                         </table>
@@ -1312,39 +1317,8 @@
                                                         {
                                                             if (Res_Search.component[0].code.text != null)
                                                             {
-                                                                @:(@Res_Search.component[0].code.text) <br />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                @:(@Res_Search.component[0].code.text)
+                                                                <br />
                                                             }
                                                         }
 
@@ -1360,7 +1334,8 @@
                                                         {
                                                             if (Res_Search.component[1].code.text != null)
                                                             {
-                                                                @:(@Res_Search.component[1].code.text) <br />
+                                                                @:(@Res_Search.component[1].code.text)
+                                                                <br />
                                                             }
                                                         }
 
@@ -1435,6 +1410,20 @@
                                         {
                                             DateTime effectiveDate = DateTime.Parse(Convert.ToString(Res_Search.effectiveDateTime));
                                             @: @effectiveDate.ToString("yyyy年MM月dd日")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                                         }
