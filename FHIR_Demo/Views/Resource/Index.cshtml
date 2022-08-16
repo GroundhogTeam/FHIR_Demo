@@ -1035,7 +1035,7 @@
                                     <td>
                                         @if (Res_Search.type != null)
                                         {
-                                            @*待修改*@
+                                            @*待修改如果沒有別的方法*@
                                             if (Res_Search.type.Count == 1)
                                             {
                                                 if (Res_Search.type[0].coding != null)
@@ -1121,54 +1121,54 @@
                                                 }
                                             }
                                             @*if (Res_Search.type[0] != null)
-            {
-                if (Res_Search.type[0].coding != null)
-                {
-                    if (Res_Search.type[0].coding[0].code != null)
-                    {
-                        @Res_Search.type[0].coding[0].code
-                        if (Res_Search.type[0].text != null)
-                        {
-                            @:(@Res_Search.type[0].text)
-                        }
-                    }
-                }
-            }
-            else if (Res_Search.type[1] != null)
-            {
-                if (Res_Search.type[1].coding != null)
-                {
-                    if (Res_Search.type[1].coding[0].code != null)
-                    {
-                        @Res_Search.type[1].coding[0].code
-                        if (Res_Search.type[1].text != null)
-                        {
-                            @:(@Res_Search.type[1].text)
-                        }
-                    }
-                }
-            }
-            else if (Res_Search.type[2] != null)
-            {
-                if (Res_Search.type[2].coding != null)
-                {
-                    if (Res_Search.type[2].coding[0].code != null)
-                    {
-                        @Res_Search.type[2].coding[0].code
-                        if (Res_Search.type[2].text != null)
-                        {
-                            @:(@Res_Search.type[2].text)
-                        }
-                    }
-                }
-            }*@
+                                    {
+                                        if (Res_Search.type[0].coding != null)
+                                        {
+                                            if (Res_Search.type[0].coding[0].code != null)
+                                            {
+                                                @Res_Search.type[0].coding[0].code
+                                                if (Res_Search.type[0].text != null)
+                                                {
+                                                    @:(@Res_Search.type[0].text)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if (Res_Search.type[1] != null)
+                                    {
+                                        if (Res_Search.type[1].coding != null)
+                                        {
+                                            if (Res_Search.type[1].coding[0].code != null)
+                                            {
+                                                @Res_Search.type[1].coding[0].code
+                                                if (Res_Search.type[1].text != null)
+                                                {
+                                                    @:(@Res_Search.type[1].text)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if (Res_Search.type[2] != null)
+                                    {
+                                        if (Res_Search.type[2].coding != null)
+                                        {
+                                            if (Res_Search.type[2].coding[0].code != null)
+                                            {
+                                                @Res_Search.type[2].coding[0].code
+                                                if (Res_Search.type[2].text != null)
+                                                {
+                                                    @:(@Res_Search.type[2].text)
+                                                }
+                                            }
+                                        }
+                                    }*@
                                         }
                                         else
                                         {
                                             @:無
                                         }
                                     </td>
-<td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">入院方式</th>
@@ -1704,6 +1704,70 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                         }
                                         else
                                         {
@@ -1853,7 +1917,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th scope="row">處置/手術名稱</th>
+                                    <th scope="row">處置/手術方式</th>
                                     <td>
                                         @if (Res_Search.code != null)
                                         {
@@ -1862,61 +1926,59 @@
                                                 if (Res_Search.code.coding[0].code != null)
                                                 {
                                                     @Res_Search.code.coding[0].code
-                                                    <br>
+                                                    if (Res_Search.code.text != null)
+                                                    {
+                                                        @:(@Res_Search.code.text)
+                                                    }
                                                 }
-                                                <br>
-                                            }
-                                            if (Res_Search.code.text != null)
-                                            {
-                                                @:說明:@Res_Search.code.text
-                                            }
 
+                                            }
                                         }
-                                        else
+                                        @if (Res_Search.category != null)
                                         {
-                                            @:無
-                                        }
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">處置/手術部位</th>
-                                    <td>
-                                        @if (Res_Search.bodySite != null)
-                                        {
-                                            @Res_Search.bodySite.coding[0].display
-                                        }
-                                        else
-                                        {
-                                            @:無
-                                        }
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">處置/手術醫師</th>
-                                    <td>
-                                        @if (Res_Search.performer != null)
-                                        {
-                                            @Res_Search.performer[0].actor.display
-                                            @:(Practitioner ID: @(Res_Search.performer[0].actor.reference.ToString().Split('/')[1]))
-                                        }
-                                        else
-                                        {
-                                            @:無
-                                        }
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">處置/手術日期</th>
-                                    <td>
-                                        @if (performedDateTime != null)
-                                        {
-                                            performedDateTime.Value.ToString("yyyy年MM月dd日");
-                                            if (performedDateTime.Value.TimeOfDay.TotalSeconds != 0)
+                                            if (Res_Search.category.coding != null)
                                             {
-                                                @performedDateTime.Value.ToString("tt hh:mm")
+                                                if (Res_Search.category.coding[0].code != null)
+                                                {
+                                                    @Res_Search.category.coding[0].code
+                                                    if (Res_Search.category.coding[0].display != null)
+                                                    {
+                                                        @:(@Res_Search.category.coding[0].display)
+                                                    }
+                                                }
+                                                if (Res_Search.category.coding[1].code != null)
+                                                {
+                                                    @Res_Search.category.coding[1].code
+                                                    if (Res_Search.category.coding[1].display != null)
+                                                    {
+                                                        @:(@Res_Search.category.coding[1].display)
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">處置/手術原因</th>
+                                    <td>
+                                        @if (Res_Search.reasonCode != null)
+                                        {
+                                            if (Res_Search.reasonCode[0].coding != null)
+                                            {
+                                                if (Res_Search.reasonCode[0].coding[0].code != null)
+                                                {
+                                                    @Res_Search.reasonCode[0].coding[0].code
+                                                    if (Res_Search.reasonCode[0].text != null)
+                                                    {
+                                                        @:(@Res_Search.reasonCode[0].text)
+                                                    }
+                                                }
                                             }
                                         }
                                         else
@@ -1936,7 +1998,239 @@
                                                 if (Res_Search.outcome.coding[0].code != null)
                                                 {
                                                     @Res_Search.outcome.coding[0].code
+                                                    if (Res_Search.outcome.text != null)
+                                                    {
+                                                        @:(@Res_Search.outcome.text)
+                                                        @:補充說明:@Res_Search.note[0].text
+                                                    }
                                                 }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">處置/手術日期</th>
+                                    <td>
+                                        @if (Res_Search.performedDateTime != null)
+                                        {
+                                            DateTime performedDate = DateTime.Parse(Convert.ToString(Res_Search.performedDateTime));
+                                            @: @performedDate.ToString("yyyy年MM月dd日")
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">未處置/手術原因</th>
+                                    <td>
+                                        @if (Res_Search.statusReason != null)
+                                        {
+                                            if (Res_Search.statusReason[0].coding != null)
+                                            {
+                                                if (Res_Search.statusReason[0].coding[0].code != null)
+                                                {
+                                                    @Res_Search.statusReason[0].coding[0].code
+                                                    if (Res_Search.statusReason.text != null)
+                                                    {
+                                                        @:(@Res_Search.statusReason.text)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">處置/手術設備</th>
+                                    <td>
+                                        @if (Res_Search.focalDevice != null)
+                                        {
+                                            if (Res_Search.focalDevice[0].action != null)
+                                            {
+                                                if (Res_Search.focalDevice[0].action.coding != null)
+                                                {
+                                                    if (Res_Search.focalDevice[0].action.coding[0].code != null)
+                                                    {
+                                                        @Res_Search.focalDevice[0].action.coding[0].code
+                                                        if (Res_Search.focalDevice[0].action.text != null)
+                                                        {
+                                                            @:(@Res_Search.focalDevice[0].action.text)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if (Res_Search.focalDevice[1].action != null)
+                                            {
+                                                if (Res_Search.focalDevice[1].action.coding != null)
+                                                {
+                                                    if (Res_Search.focalDevice[1].action.coding[0].code != null)
+                                                    {
+                                                        @Res_Search.focalDevice[1].action.coding[0].code
+                                                        if (Res_Search.focalDevice[1].action.text != null)
+                                                        {
+                                                            @:(@Res_Search.focalDevice[1].action.text)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        @if (Res_Search.extension != null)
+                                        {
+                                            if (Res_Search.extension[0].extension != null)
+                                            {
+                                                if (Res_Search.extension[0].extension[0].valueCodeableConcept != null)
+                                                {
+                                                    if (Res_Search.extension[0].extension[0].valueCodeableConcept.coding != null)
+                                                    {
+                                                        if (Res_Search.extension[0].extension[0].valueCodeableConcept.coding[0].code != null)
+                                                        {
+                                                            @Res_Search.extension[0].extension[0].valueCodeableConcept.coding[0].code
+                                                            if (Res_Search.extension[0].extension[0].valueCodeableConcept.text != null)
+                                                            {
+                                                                @:(@Res_Search.extension[0].extension[0].valueCodeableConcept.text)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if (Res_Search.extension[1].extension != null)
+                                            {
+                                                if (Res_Search.extension[1].extension[0].valueReference != null)
+                                                {
+                                                    if (Res_Search.extension[1].extension[0].valueReference.reference != null)
+                                                    {
+                                                        @Res_Search.extension[1].extension[0].valueReference.reference
+                                                        if (Res_Search.extension[1].extension[0].valueReference.display != null)
+                                                        {
+                                                            @:(@Res_Search.extension[1].extension[0].valueReference.display)
+                                                        }
+                                                    }
+                                                }
+                                                if (Res_Search.extension[1].extension[1].valueQuantity != null)
+                                                {
+                                                    if (Res_Search.extension[1].extension[1].valueQuantity.value != null)
+                                                    {
+                                                        @Res_Search.extension[1].extension[1].valueQuantity.value
+                                                        if (Res_Search.extension[1].extension[1].valueQuantity.system != null)
+                                                        {
+                                                            @:(@Res_Search.extension[1].extension[1].valueQuantity.system)
+                                                        }
+                                                    }
+                                                }
+                                                if (Res_Search.extension[1].extension[2].valueUnsignedInt != null)
+                                                {
+                                                    @Res_Search.extension[1].extension[2].valueUnsignedInt @:次數
+                                                }
+                                            }
+                                            if (Res_Search.extension[2].extension != null)
+                                            {
+                                                if (Res_Search.extension[2].extension[0].valueReference != null)
+                                                {
+                                                    if (Res_Search.extension[2].extension[0].valueReference.reference != null)
+                                                    {
+                                                        @Res_Search.extension[2].extension[0].valueReference.reference
+                                                        if (Res_Search.extension[2].extension[0].valueReference.display != null)
+                                                        {
+                                                            @:(@Res_Search.extension[2].extension[0].valueReference.display)
+                                                        }
+                                                    }
+                                                }
+                                                if (Res_Search.extension[2].extension[1].valueQuantity != null)
+                                                {
+                                                    if (Res_Search.extension[2].extension[1].valueQuantity.value != null)
+                                                    {
+                                                        @Res_Search.extension[2].extension[1].valueQuantity.value
+                                                        if (Res_Search.extension[2].extension[1].valueQuantity.system != null)
+                                                        {
+                                                            @:(@Res_Search.extension[2].extension[1].valueQuantity.system)
+                                                        }
+                                                    }
+                                                }
+                                                if (Res_Search.extension[2].extension[2].valueUnsignedInt != null)
+                                                {
+                                                    @Res_Search.extension[2].extension[2].valueUnsignedInt @:次數
+                                                }
+                                            }
+                                            if (Res_Search.extension[3].extension != null)
+                                            {
+                                                if (Res_Search.extension[3].extension[0].valueCodeableConcept != null)
+                                                {
+                                                    if (Res_Search.extension[3].extension[0].valueCodeableConcept.coding != null)
+                                                    {
+                                                        if (Res_Search.extension[3].extension[0].valueCodeableConcept.coding[0].code != null)
+                                                        {
+                                                            @Res_Search.extension[3].extension[0].valueCodeableConcept.coding[0].code
+                                                            if (Res_Search.extension[3].extension[0].valueCodeableConcept.text != null)
+                                                            {
+                                                                @:(@Res_Search.extension[3].extension[0].valueCodeableConcept.text)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if (Res_Search.extension[4].extension != null)
+                                            {
+                                                if (Res_Search.extension[4].extension[0].valueReference != null)
+                                                {
+                                                    if (Res_Search.extension[4].extension[0].valueReference.reference != null)
+                                                    {
+                                                        @Res_Search.extension[4].extension[0].valueReference.reference
+                                                        if (Res_Search.extension[4].extension[0].valueReference.display != null)
+                                                        {
+                                                            @:(@Res_Search.extension[4].extension[0].valueReference.display)
+                                                        }
+                                                    }
+                                                }
+                                                if (Res_Search.extension[4].extension[1].valueQuantity != null)
+                                                {
+                                                    if (Res_Search.extension[4].extension[1].valueQuantity.value != null)
+                                                    {
+                                                        @Res_Search.extension[4].extension[1].valueQuantity.value
+                                                        if (Res_Search.extension[4].extension[1].valueQuantity.system != null)
+                                                        {
+                                                            @:(@Res_Search.extension[4].extension[1].valueQuantity.system)
+                                                        }
+                                                    }
+                                                }
+                                                if (Res_Search.extension[4].extension[2].valueUnsignedInt != null)
+                                                {
+                                                    @Res_Search.extension[4].extension[2].valueUnsignedInt @:次數
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">處置/手術設備治療日期</th>
+                                    <td>
+                                        @if (Res_Search.performedPeriod != null)
+                                        {
+                                            if (Res_Search.performedPeriod.start != null)
+                                            {
+                                                DateTime performedDates = DateTime.Parse(Convert.ToString(Res_Search.performedPeriod.start));
+                                                @: @performedDates.ToString("yyyy年MM月dd日")
+                                            }
+                                            if (Res_Search.performedPeriod.end != null)
+                                            {
+                                                DateTime performedDatee = DateTime.Parse(Convert.ToString(Res_Search.performedPeriod.end));
+                                                @: ~ @performedDatee.ToString("yyyy年MM月dd日")
                                             }
 
                                         }
