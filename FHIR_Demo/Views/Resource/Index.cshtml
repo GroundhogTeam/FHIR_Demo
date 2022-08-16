@@ -2263,22 +2263,30 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th scope="row">疾病診斷名稱</th>
+                                    <th scope="row">疾病診斷</th>
                                     <td>
                                         @if (Res_Search.code != null)
                                         {
                                             if (Res_Search.code.coding != null)
                                             {
-                                                @Res_Search.code.coding[0].display
-                                                <br>
-                                                @:說明:@Res_Search.code.text
+                                                if (Res_Search.code.coding[0].code != null)
+                                                {
+                                                    @Res_Search.code.coding[0].code
+                                                    if (Res_Search.code.text != null)
+                                                    {
+                                                        @:(@Res_Search.code.text)
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @:無
+                                                }
                                             }
                                             else
                                             {
                                                 @:無
                                             }
                                         }
-
                                         else
                                         {
                                             @:無
@@ -2287,36 +2295,23 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">處置/手術日期</th>
+                                    <th scope="row">病發年齡</th>
                                     <td>
-                                        @if (onsetDateTime != null)
+                                        @if (Res_Search.onsetAge != null)
                                         {
-                                            onsetDateTime.Value.ToString("yyyy年MM月dd日");
-                                            if (onsetDateTime.Value.TimeOfDay.TotalSeconds != 0)
+                                            if (Res_Search.onsetAge.value != null)
                                             {
-                                                @onsetDateTime.Value.ToString("tt hh:mm")
-                                            }
-                                        }
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">疾病診斷部位</th>
-                                    <td>
-                                        @if (Res_Search.bodySite != null)
-                                        {
-                                            if (Res_Search.bodySite[0].coding != null)
-                                            {
-                                                @Res_Search.bodySite[0].coding[0].code
-                                                <br>
-                                                @:說明:@Res_Search.bodySite[0].text
+                                                @Res_Search.onsetAge.value
+                                                if (Res_Search.onsetAge.unit != null)
+                                                {
+                                                    @:(@Res_Search.onsetAge.unit)
+                                                }
                                             }
                                             else
                                             {
                                                 @:無
                                             }
                                         }
-
                                         else
                                         {
                                             @:無
@@ -2324,6 +2319,107 @@
                                     </td>
                                     <td></td>
                                 </tr>
+                                <tr>
+                                    <th scope="row">案件分類</th>
+                                    <td>
+                                        @if (Res_Search.category != null)
+                                        {
+                                            if (Res_Search.category[0].coding != null)
+                                            {
+                                                if (Res_Search.category[0].coding[0].code != null)
+                                                {
+                                                    @Res_Search.category[0].coding[0].code
+                                                    if (Res_Search.category[0].coding[0].code != null)
+                                                    {
+                                                        @:(@Res_Search.category[0].text) <br>
+                                                    }
+                                                }
+                                            }
+                                            @*if (Res_Search.category.Count == 1)
+                    {
+                        if (Res_Search.category[0].coding != null)
+                        {
+                            if (Res_Search.category[0].coding[0].code != null)
+                            {
+                                @Res_Search.category[0].coding[0].code
+                                if (Res_Search.category[0].coding[0].code != null)
+                                {
+                                    @:(@Res_Search.category[0].text) <br>
+                                }
+                            }
+                        }
+                    }
+                    if (Res_Search.category.Count == 2)
+                    {
+                        if (Res_Search.category[0].coding != null)
+                        {
+                            if (Res_Search.category[0].coding[0].code != null)
+                            {
+                                @Res_Search.category[0].coding[0].code
+                                if (Res_Search.category[0].coding[0].code != null)
+                                {
+                                    @:(@Res_Search.category[0].text) <br>
+                                }
+                            }
+                        }
+                        if (Res_Search.category[1].coding != null)
+                        {
+                            if (Res_Search.category[1].coding[0].code != null)
+                            {
+                                @Res_Search.category[1].coding[0].code
+                                if (Res_Search.category[1].coding[0].code != null)
+                                {
+                                    @:(@Res_Search.category[1].text) <br>
+                                }
+                            }
+                        }
+                    }
+                    if (Res_Search.category.Count == 3)
+                    {
+                        if (Res_Search.category[0].coding != null)
+                        {
+                            if (Res_Search.category[0].coding[0].code != null)
+                            {
+                                @Res_Search.category[0].coding[0].code
+                                if (Res_Search.category[0].coding[0].code != null)
+                                {
+                                    @:(@Res_Search.category[0].text) <br>
+                                }
+                            }
+                        }
+                        if (Res_Search.category[1].coding != null)
+                        {
+                            if (Res_Search.category[1].coding[0].code != null)
+                            {
+                                @Res_Search.category[1].coding[0].code
+                                if (Res_Search.category[1].coding[0].code != null)
+                                {
+                                    @:(@Res_Search.category[1].text) <br>
+                                }
+                            }
+                        }
+                        if (Res_Search.category[2].coding != null)
+                        {
+                            if (Res_Search.category[2].coding[0].code != null)
+                            {
+                                @Res_Search.category[2].coding[0].code
+                                if (Res_Search.category[2].coding[0].code != null)
+                                {
+                                    @:(@Res_Search.category[2].text) <br>
+                                }
+                            }
+
+                        }
+                    }*@
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+
                             </tbody>
 
                         </table>
