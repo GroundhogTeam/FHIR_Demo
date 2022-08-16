@@ -1013,9 +1013,15 @@
                                 <tr>
                                     <th scope="row">就醫科別代號</th>
                                     <td>
-                                        @if (Res_Search.identifier != null)
+                                        @if (Res_Search.serviceType != null)
                                         {
-                                            @Res_Search.identifier[0].value
+                                            if (Res_Search.serviceType.coding != null)
+                                            {
+                                                if (Res_Search.serviceType.coding[0].code != null)
+                                                {
+                                                    @Res_Search.serviceType.coding[0].code
+                                                }
+                                            }
                                         }
                                         else
                                         {
@@ -1025,9 +1031,163 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">就醫類別</th>
+                                    <th scope="row">案件類別</th>
                                     <td>
-                                        @(Res_Search.@class.code)
+                                        @if (Res_Search.type != null)
+                                        {
+                                            @*待修改*@
+                                            if (Res_Search.type.Count == 1)
+                                            {
+                                                if (Res_Search.type[0].coding != null)
+                                                {
+                                                    if (Res_Search.type[0].coding[0].code != null)
+                                                    {
+                                                        @Res_Search.type[0].coding[0].code
+                                                        if (Res_Search.type[0].text != null)
+                                                        {
+                                                            @:(@Res_Search.type[0].text)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if (Res_Search.type.Count == 2)
+                                            {
+                                                if (Res_Search.type[0].coding != null)
+                                                {
+                                                    if (Res_Search.type[0].coding[0].code != null)
+                                                    {
+                                                        @Res_Search.type[0].coding[0].code
+                                                        if (Res_Search.type[0].text != null)
+                                                        {
+                                                            @:(@Res_Search.type[0].text)
+                                                        }
+                                                    }
+                                                }
+                                                if (Res_Search.type[1] != null)
+                                                {
+                                                    if (Res_Search.type[1].coding != null)
+                                                    {
+                                                        if (Res_Search.type[1].coding[0].code != null)
+                                                        {
+                                                            @Res_Search.type[1].coding[0].code
+                                                            if (Res_Search.type[1].text != null)
+                                                            {
+                                                                @:(@Res_Search.type[1].text)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if (Res_Search.type.Count == 3)
+                                            {
+                                                if (Res_Search.type[0].coding != null)
+                                                {
+                                                    if (Res_Search.type[0].coding[0].code != null)
+                                                    {
+                                                        @Res_Search.type[0].coding[0].code
+                                                        if (Res_Search.type[0].text != null)
+                                                        {
+                                                            @:(@Res_Search.type[0].text)
+                                                        }
+                                                    }
+                                                }
+                                                if (Res_Search.type[1] != null)
+                                                {
+                                                    if (Res_Search.type[1].coding != null)
+                                                    {
+                                                        if (Res_Search.type[1].coding[0].code != null)
+                                                        {
+                                                            @Res_Search.type[1].coding[0].code
+                                                            if (Res_Search.type[1].text != null)
+                                                            {
+                                                                @:(@Res_Search.type[1].text)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                if (Res_Search.type[2] != null)
+                                                {
+                                                    if (Res_Search.type[2].coding != null)
+                                                    {
+                                                        if (Res_Search.type[2].coding[0].code != null)
+                                                        {
+                                                            @Res_Search.type[2].coding[0].code
+                                                            if (Res_Search.type[2].text != null)
+                                                            {
+                                                                @:(@Res_Search.type[2].text)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            @*if (Res_Search.type[0] != null)
+            {
+                if (Res_Search.type[0].coding != null)
+                {
+                    if (Res_Search.type[0].coding[0].code != null)
+                    {
+                        @Res_Search.type[0].coding[0].code
+                        if (Res_Search.type[0].text != null)
+                        {
+                            @:(@Res_Search.type[0].text)
+                        }
+                    }
+                }
+            }
+            else if (Res_Search.type[1] != null)
+            {
+                if (Res_Search.type[1].coding != null)
+                {
+                    if (Res_Search.type[1].coding[0].code != null)
+                    {
+                        @Res_Search.type[1].coding[0].code
+                        if (Res_Search.type[1].text != null)
+                        {
+                            @:(@Res_Search.type[1].text)
+                        }
+                    }
+                }
+            }
+            else if (Res_Search.type[2] != null)
+            {
+                if (Res_Search.type[2].coding != null)
+                {
+                    if (Res_Search.type[2].coding[0].code != null)
+                    {
+                        @Res_Search.type[2].coding[0].code
+                        if (Res_Search.type[2].text != null)
+                        {
+                            @:(@Res_Search.type[2].text)
+                        }
+                    }
+                }
+            }*@
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+<td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">入院方式</th>
+                                    <td>
+                                        @if (Res_Search.@class != null)
+                                        {
+                                            if (Res_Search.@class.code != null)
+                                            {
+                                                @(Res_Search.@class.code)
+                                            }
+                                            else
+                                            {
+                                                @:無
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
                                     </td>
                                     <td></td>
                                 </tr>
@@ -1036,18 +1196,88 @@
                                     <td>
                                         @if (Res_Search.period != null)
                                         {
-                                            @Res_Search.period.start
+                                            if (Res_Search.period.start != null)
+                                            {
+                                                DateTime periods = DateTime.Parse(Convert.ToString(Res_Search.period.start));
+                                                @: @periods.ToString("yyyy年MM月dd日")
+                                            }
+                                            if (Res_Search.period.end != null)
+                                            {
+                                                DateTime periode = DateTime.Parse(Convert.ToString(Res_Search.period.end));
+                                                @: ~ @periode.ToString("yyyy年MM月dd日")
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @:無
                                         }
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">主治醫師</th>
+                                    <th scope="row">轉歸代碼</th>
                                     <td>
-                                        @if (Res_Search.participant != null)
+                                        @if (Res_Search.hospitalization != null)
                                         {
-                                            @Res_Search.participant[0].individual.display
-                                            @:(Practitioner ID: @(Res_Search.participant[0].individual.reference.ToString().Split('/')[1]))
+                                            if (Res_Search.hospitalization.dischargeDisposition != null)
+                                            {
+                                                if (Res_Search.hospitalization.dischargeDisposition.coding != null)
+                                                {
+                                                    if (Res_Search.hospitalization.dischargeDisposition.coding[0].code != null)
+                                                    {
+                                                        @Res_Search.hospitalization.dischargeDisposition.coding[0].code
+                                                        if (Res_Search.hospitalization.dischargeDisposition.text != null)
+                                                        {
+                                                            @:(@Res_Search.hospitalization.dischargeDisposition.text)
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        @:無
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @:無
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @:無
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            @:無
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">就診原因</th>
+                                    <td>
+                                        @if (Res_Search.reasonCode != null)
+                                        {
+                                            if (Res_Search.reasonCode[0].coding != null)
+                                            {
+                                                if (Res_Search.reasonCode[0].coding[0].code != null)
+                                                {
+                                                    @Res_Search.reasonCode[0].coding[0].code
+                                                    if (Res_Search.reasonCode[0].text != null)
+                                                    {
+                                                        @:(@Res_Search.reasonCode[0].text)
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @:無
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @:無
+                                            }
                                         }
                                         else
                                         {
@@ -1410,6 +1640,54 @@
                                         {
                                             DateTime effectiveDate = DateTime.Parse(Convert.ToString(Res_Search.effectiveDateTime));
                                             @: @effectiveDate.ToString("yyyy年MM月dd日")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
